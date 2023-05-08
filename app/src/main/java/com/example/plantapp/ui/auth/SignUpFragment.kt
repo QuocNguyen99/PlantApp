@@ -42,6 +42,7 @@ class SignUpFragment : Fragment() {
     private fun initEvent() {
         binding.apply {
             btnSignUp.setOnClickListener {
+                Log.d("TAG", "createUserWithEmail:success")
                 val isValidEmail = edtEmail.text.toString().isValidEmail()
                 val isValidPassword = edtPassword.text.toString().isValidPassword()
                 if (isValidEmail && isValidPassword) {
@@ -60,6 +61,8 @@ class SignUpFragment : Fragment() {
                                 Toast.makeText(requireContext(), "Authentication failed.", Toast.LENGTH_SHORT).show()
                             }
                         }
+                } else {
+                    Toast.makeText(requireContext(), "Invalid email or password.", Toast.LENGTH_SHORT).show()
                 }
             }
         }
