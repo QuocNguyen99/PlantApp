@@ -66,4 +66,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-firestore-ktx'
 
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+
 }
