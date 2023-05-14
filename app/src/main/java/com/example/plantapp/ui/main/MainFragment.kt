@@ -1,10 +1,15 @@
 package com.example.plantapp.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -14,7 +19,7 @@ import com.example.plantapp.R
 import com.example.plantapp.databinding.FragmentMainBinding
 import com.example.plantapp.ui.main.home.HomeFragment
 import com.example.plantapp.ui.main.profile.ProfileFragment
-
+import com.google.common.util.concurrent.ListenableFuture
 
 class MainFragment : Fragment() {
 
@@ -65,6 +70,10 @@ class MainFragment : Fragment() {
                     bottomNavigationView.menu.getItem(position).isChecked = true
                 }
             })
+
+            fab.setOnClickListener {
+                startCamera()
+            }
         }
     }
 
@@ -82,8 +91,40 @@ class MainFragment : Fragment() {
             adapter.addFragment(HomeFragment())
             adapter.addFragment(ProfileFragment())
             vp.adapter = adapter
+
+            vp.isUserInputEnabled = false
         }
     }
+
+    private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
+    private lateinit var cameraPreview: Preview
+    private lateinit var cameraSelector: CameraSelector
+
+    private fun startCamera() {
+        cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
+
+        cameraProviderFuture.addListener({
+            val cameraProvider = cameraProviderFuture.get()
+
+            cameraPreview = Preview.Builder().build()
+            cameraSelector = CameraSelector.Builder()
+                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                .build()
+
+            try {
+                cameraProvider.unbindAll()
+
+                val camera = cameraProvider.bindToLifecycle(
+                    this, cameraSelector, cameraPreview
+                )
+
+//                cameraPreview.setSurfaceProvider(viewFinder.createSurfaceProvider(camera.cameraInfo))
+            } catch (exception: Exception) {
+                Log.e("TAG", "Failed to start camera", exception)
+            }
+        }, ContextCompat.getMainExecutor(requireContext()))
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
