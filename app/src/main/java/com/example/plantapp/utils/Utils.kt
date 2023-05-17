@@ -2,6 +2,8 @@ package com.example.plantapp.utils
 
 import android.text.TextUtils
 import android.util.Patterns
+import com.google.firebase.Timestamp
+import java.text.SimpleDateFormat
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -19,4 +21,9 @@ fun String.isValidPassword(): Boolean {
     val pattern = Pattern.compile(passWordPattern)
     val matcher: Matcher = pattern.matcher(this)
     return matcher.matches()
+}
+
+fun Timestamp.format(): String {
+    val simpleDateFormat = SimpleDateFormat("yyyy . MM . dd")
+    return simpleDateFormat.format(toDate())
 }

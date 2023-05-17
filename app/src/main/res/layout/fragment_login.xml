@@ -51,6 +51,7 @@
 
         <EditText
             android:id="@+id/edtEmail"
+            android:text="abc@gmail.comm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_8sdp"
@@ -76,7 +77,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_8sdp"
-            android:text="Nguyen@12345678"
+            android:text="!QAZxsw2~!@#"
             android:backgroundTint="@color/colorSecondary"
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="parent"

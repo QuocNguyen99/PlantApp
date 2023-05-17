@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_homeFragment2_to_profileFragment2"
             app:destination="@id/profileFragment2" />
+        <action
+            android:id="@+id/action_homeFragment2_to_articleFragment"
+            app:destination="@id/articleFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment2"
@@ -21,5 +24,24 @@
         <action
             android:id="@+id/action_profileFragment2_to_homeFragment2"
             app:destination="@id/homeFragment2" />
+        <action
+            android:id="@+id/action_profileFragment2_to_articleDetailFragment"
+            app:destination="@id/articleDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/articleFragment"
+        android:name="com.example.plantapp.ui.main.article.ArticleFragment"
+        android:label="ArticleFragment" >
+        <action
+            android:id="@+id/action_articleFragment_to_articleDetailFragment"
+            app:destination="@id/articleDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/articleDetailFragment"
+        android:name="com.example.plantapp.ui.main.article.ArticleDetailFragment"
+        android:label="ArticleDetailFragment" >
+        <argument
+            android:name="article"
+            app:argType="com.example.plantapp.data.model.Article" />
     </fragment>
 </navigation>

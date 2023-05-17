@@ -66,13 +66,3 @@ class HomeViewModel(private val plantRepository: PlantRepository) : ViewModel() 
         jobGetCycle?.cancel()
     }
 }
-
-class HomeViewModelFactory constructor(private val plantRepository: PlantRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
-            HomeViewModel(plantRepository) as T
-        } else {
-            throw IllegalArgumentException("ViewModel Not Found")
-        }
-    }
-}

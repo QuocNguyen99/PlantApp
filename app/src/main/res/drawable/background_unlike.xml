@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape
+            android:shape="oval">
+            <solid android:color="@color/white"/>
+            <stroke android:color="#EFEBEB"
+                android:width="1dp"/>
+        </shape>
+    </item>
+    <item android:drawable="@drawable/ic_heart_border_24"
+        android:top="10dp"
+        android:bottom="10dp"
+        android:start="10dp"
+        android:end="10dp"/>
+</layer-list>

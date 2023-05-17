@@ -8,12 +8,14 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import com.example.plantapp.R
 import com.example.plantapp.databinding.FragmentHomeBinding
 import com.example.plantapp.network.ApiClient
 import com.example.plantapp.network.repository.plant.PlantRepository
+import com.example.plantapp.ui.ViewModelFactory
 
 
 class HomeFragment : Fragment() {
@@ -38,7 +40,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val retrofitService = ApiClient.plantService
         val mainRepository = PlantRepository(retrofitService)
-        viewModel = ViewModelProvider(this, HomeViewModelFactory(mainRepository))[HomeViewModel::class.java]
+        viewModel = ViewModelProvider(this, ViewModelFactory(mainRepository))[HomeViewModel::class.java]
 
         initData()
         initView()
@@ -49,6 +51,7 @@ class HomeFragment : Fragment() {
         }
         binding.itemThree.setOnClickListener {
             Log.d("setOnClickListener", "onViewCreated: ")
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragment2ToArticleFragment())
         }
         binding.itemTwo.setOnClickListener {
             Log.d("setOnClickListener", "onViewCreated: ")
