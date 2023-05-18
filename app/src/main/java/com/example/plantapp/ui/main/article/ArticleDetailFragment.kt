@@ -1,9 +1,14 @@
 package com.example.plantapp.ui.main.article
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -69,6 +74,10 @@ class ArticleDetailFragment: Fragment() {
             } else {
                 imvLiked.setImageResource(R.drawable.background_unlike)
             }
+
+            article.tag.forEach {
+                addTagView(linearTags, it)
+            }
         }
     }
 
@@ -90,6 +99,24 @@ class ArticleDetailFragment: Fragment() {
             }
             viewModel.setLikedArticle()
         }
+    }
+
+
+    private fun addTagView(linearLayout: LinearLayout, tag: String) {
+        val textView = TextView(context)
+        val layoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        layoutParams.marginEnd = 10
+        layoutParams.marginStart = 10
+
+        textView.text = tag
+        textView.setTextColor(Color.parseColor("#FF2196F3"))
+        textView.background =
+            AppCompatResources.getDrawable(requireContext(), R.drawable.backgroud_tag)
+        textView.setPadding(15, 5,15,5)
+        linearLayout.addView(textView, layoutParams)
     }
 
 }
