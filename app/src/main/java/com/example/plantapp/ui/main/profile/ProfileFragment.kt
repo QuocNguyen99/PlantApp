@@ -13,7 +13,9 @@ import com.example.plantapp.databinding.FragmentHomeBinding
 import com.example.plantapp.databinding.FragmentProfileBinding
 import com.example.plantapp.network.repository.article.ArticleRepository
 import com.example.plantapp.ui.ViewModelFactory
+import com.example.plantapp.ui.main.MainFragmentDirections
 import com.example.plantapp.ui.main.article.ArticleAdapter
+import com.example.plantapp.ui.main.article.ArticleDetailFragmentArgs
 import com.example.plantapp.ui.main.article.ArticleFragmentDirections
 import com.example.plantapp.ui.main.home.HomeViewModel
 
@@ -91,8 +93,7 @@ class ProfileFragment : Fragment() {
         }
 
         collectedArticleAdapter.onClick = {
-            val action = ProfileFragmentDirections.actionProfileFragment2ToArticleDetailFragment(it)
-            findNavController().navigate(action)
+            findNavController().navigate(MainFragmentDirections.actionMainFragmentToArticleDetailFragment(it))
         }
     }
 

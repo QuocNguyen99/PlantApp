@@ -2,13 +2,13 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_graph"
-    app:startDestination="@id/homeFragment2">
+    android:id="@+id/main"
+    app:startDestination="@id/mainFragment">
     <fragment
         android:id="@+id/homeFragment2"
         android:name="com.example.plantapp.ui.main.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment2_to_profileFragment2"
             app:destination="@id/profileFragment2" />
@@ -20,7 +20,7 @@
         android:id="@+id/profileFragment2"
         android:name="com.example.plantapp.ui.main.profile.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" >
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment2_to_homeFragment2"
             app:destination="@id/homeFragment2" />
@@ -31,7 +31,7 @@
     <fragment
         android:id="@+id/articleFragment"
         android:name="com.example.plantapp.ui.main.article.ArticleFragment"
-        android:label="ArticleFragment" >
+        android:label="ArticleFragment">
         <action
             android:id="@+id/action_articleFragment_to_articleDetailFragment"
             app:destination="@id/articleDetailFragment" />
@@ -39,9 +39,21 @@
     <fragment
         android:id="@+id/articleDetailFragment"
         android:name="com.example.plantapp.ui.main.article.ArticleDetailFragment"
-        android:label="ArticleDetailFragment" >
+        android:label="ArticleDetailFragment">
         <argument
             android:name="article"
             app:argType="com.example.plantapp.data.model.Article" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.plantapp.ui.main.MainFragment"
+        android:label="MainFragment">
+        <action
+            android:id="@+id/action_mainFragment_to_articleDetailFragment"
+            app:destination="@id/articleDetailFragment" />
+
+        <action
+            android:id="@+id/action_mainFragment_to_articleFragment"
+            app:destination="@id/articleFragment" />
     </fragment>
 </navigation>

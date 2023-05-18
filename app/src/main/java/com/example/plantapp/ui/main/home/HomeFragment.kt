@@ -16,6 +16,8 @@ import com.example.plantapp.databinding.FragmentHomeBinding
 import com.example.plantapp.network.ApiClient
 import com.example.plantapp.network.repository.plant.PlantRepository
 import com.example.plantapp.ui.ViewModelFactory
+import com.example.plantapp.ui.main.MainFragment
+import com.example.plantapp.ui.main.MainFragmentDirections
 
 
 class HomeFragment : Fragment() {
@@ -51,7 +53,7 @@ class HomeFragment : Fragment() {
         }
         binding.itemThree.setOnClickListener {
             Log.d("setOnClickListener", "onViewCreated: ")
-            findNavController().navigate(HomeFragmentDirections.actionHomeFragment2ToArticleFragment())
+            findNavController().navigate(MainFragmentDirections.actionMainFragmentToArticleFragment())
         }
         binding.itemTwo.setOnClickListener {
             Log.d("setOnClickListener", "onViewCreated: ")

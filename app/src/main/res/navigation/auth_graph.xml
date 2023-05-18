@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_graph"
+    android:id="@+id/auth_graph"
     app:startDestination="@id/walkThroughFragment">
 
     <fragment
@@ -27,11 +27,6 @@
         <action
             android:id="@+id/action_loginFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
-        <action
-            android:id="@+id/action_loginFragment_to_mainFragment"
-            app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="true"
-            app:destination="@id/mainFragment" />
     </fragment>
     <fragment
         android:id="@+id/forgetPasswordFragment"
@@ -41,8 +36,6 @@
         android:id="@+id/signUpFragment"
         android:name="com.example.plantapp.ui.auth.SignUpFragment"
         android:label="SignUpFragment" />
-    <fragment
-        android:id="@+id/mainFragment"
-        android:name="com.example.plantapp.ui.main.MainFragment"
-        android:label="MainFragment" />
+
+    <include app:graph="@navigation/main_graph" />
 </navigation>
