@@ -55,8 +55,8 @@ class ArticleFragment : Fragment() {
             findNavController().navigate(action)
         }
 
-        articleAdapter.onLiked = { articleId, email, isLiked ->
-            viewModel.setLikedArticle(articleId, email, isLiked)
+        articleAdapter.onLiked = { articleId, isLiked ->
+            viewModel.setLikedArticle(articleId, isLiked)
         }
 
         binding.imvBack.setOnClickListener {

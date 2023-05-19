@@ -19,7 +19,7 @@ class ArticleAdapter:
     ListAdapter<Article, ArticleAdapter.ArticleViewHolder>(ArticleDataDiff()) {
 
     var onClick: ((Article) -> Unit)? = null
-    var onLiked: ((String, String, Boolean) -> Unit)? = null
+    var onLiked: ((String, Boolean) -> Unit)? = null
 
     inner class ArticleViewHolder(private val binding: ItemArticleBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -46,12 +46,14 @@ class ArticleAdapter:
                     var isLiked = false
                     if (article.liked.contains(email)) {
                         isLiked = false
+                        article.liked.remove(email)
                         imvLiked.setImageResource(R.drawable.ic_heart_border_24)
                     } else {
                         isLiked = true
+                        article.liked.add(email)
                         imvLiked.setImageResource(R.drawable.ic_heart_fill)
                     }
-                    onLiked?.invoke(article.id, email, isLiked)
+                    onLiked?.invoke(article.id, isLiked)
                 }
             }
         }

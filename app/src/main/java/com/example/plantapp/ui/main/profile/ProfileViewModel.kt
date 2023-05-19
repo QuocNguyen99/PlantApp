@@ -23,7 +23,7 @@ class ProfileViewModel(private val articleRepository: ArticleRepository): ViewMo
     }
 
     fun getCollectedArticle() {
-        articleRepository.getArticles(
+        articleRepository.getArticlesRealTime(
             onSuccess = {
                 val collected = mutableListOf<Article>()
                 it.forEach { article ->
@@ -42,7 +42,7 @@ class ProfileViewModel(private val articleRepository: ArticleRepository): ViewMo
     }
 
     fun setLikedArticle(articleId: String, isLiked: Boolean) {
-        articleRepository.likedArticle(articleId, isLiked,_email,
+        articleRepository.likedArticle(articleId, isLiked,
             onSuccess = {
                 getCollectedArticle()
             },

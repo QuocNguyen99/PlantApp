@@ -3,6 +3,7 @@ package com.example.plantapp.ui.main.article
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,7 +58,9 @@ class ArticleDetailFragment: Fragment() {
     }
 
     private fun initObserve() {
-
+        viewModel.likeCompleted.observe(viewLifecycleOwner) {
+            binding.imvLiked.isEnabled = it
+        }
     }
 
     private fun initData() {
@@ -87,17 +90,20 @@ class ArticleDetailFragment: Fragment() {
         }
 
         binding.imvLiked.setOnClickListener {
-            viewModel.setLikedArticle()
-        }
-
-        binding.imvLiked.setOnClickListener {
+            Log.d("CheckApp", "imvLiked clicked")
+            it.isEnabled = false
+            var isLiked = false
             val email = Firebase.auth.currentUser?.email ?: ""
             if (article.liked.contains(email)) {
+                article.liked.remove(email)
+                isLiked = false
                 binding.imvLiked.setImageResource(R.drawable.background_unlike)
             } else {
+                article.liked.add(email)
+                isLiked = true
                 binding.imvLiked.setImageResource(R.drawable.background_like)
             }
-            viewModel.setLikedArticle()
+            viewModel.setLikedArticle(isLiked)
         }
     }
 

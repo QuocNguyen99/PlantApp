@@ -27,8 +27,8 @@ class ArticleViewModel(
         )
     }
 
-    fun setLikedArticle(articleId: String, email: String, isLiked: Boolean) {
-        articleRepository.likedArticle(articleId, isLiked, email,
+    fun setLikedArticle(articleId: String, isLiked: Boolean) {
+        articleRepository.likedArticle(articleId, isLiked,
         onSuccess = {
             getArticles()
         },

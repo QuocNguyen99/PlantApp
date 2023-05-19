@@ -88,7 +88,7 @@ class ProfileFragment : Fragment() {
             }
         }
 
-        collectedArticleAdapter.onLiked = { articleId, _, isLiked ->
+        collectedArticleAdapter.onLiked = { articleId, isLiked ->
             viewModel.setLikedArticle(articleId, isLiked)
         }
 
