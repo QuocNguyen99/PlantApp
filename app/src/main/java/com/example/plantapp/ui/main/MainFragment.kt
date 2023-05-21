@@ -20,6 +20,8 @@ import com.example.plantapp.databinding.FragmentMainBinding
 import com.example.plantapp.ui.main.home.HomeFragment
 import com.example.plantapp.ui.main.profile.ProfileFragment
 import com.google.common.util.concurrent.ListenableFuture
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class MainFragment : Fragment() {
 
@@ -72,7 +74,8 @@ class MainFragment : Fragment() {
             })
 
             fab.setOnClickListener {
-                startCamera()
+//                startCamera()
+                val db = Firebase.firestore
             }
         }
     }

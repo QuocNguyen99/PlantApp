@@ -32,7 +32,7 @@ class HomeViewModel(private val plantRepository: PlantRepository) : ViewModel() 
         jobGetPlant = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
             try {
                 val data = plantRepository.getPlants(page, key)
-                Log.d("TAG", "Error get plant: ${data}")
+                Log.d("TAG", "Error get plant: $data")
                 _plants.postValue(data.data)
             } catch (ex: Exception) {
                 Log.d("TAG", "Error get plant: ${ex.message}")

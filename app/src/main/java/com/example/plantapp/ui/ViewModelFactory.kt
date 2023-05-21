@@ -8,6 +8,7 @@ import com.example.plantapp.ui.main.article.ArticleDetailViewModel
 import com.example.plantapp.ui.main.article.ArticleViewModel
 import com.example.plantapp.ui.main.home.HomeViewModel
 import com.example.plantapp.ui.main.profile.ProfileViewModel
+import com.example.plantapp.ui.main.specie.SpeciesViewModel
 
 class ViewModelFactory constructor(
     private val plantRepository: PlantRepository? = null,
@@ -44,6 +45,14 @@ class ViewModelFactory constructor(
                     throw IllegalArgumentException("plantRepository == null")
                 } else {
                     ArticleDetailViewModel(articleRepository) as T
+                }
+            }
+
+            SpeciesViewModel::class.java -> {
+                if (plantRepository == null) {
+                    throw IllegalArgumentException("SpeciesViewModel == null")
+                } else {
+                    SpeciesViewModel(plantRepository) as T
                 }
             }
 

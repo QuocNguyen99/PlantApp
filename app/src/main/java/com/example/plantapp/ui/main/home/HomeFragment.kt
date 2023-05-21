@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SnapHelper
@@ -18,6 +20,11 @@ import com.example.plantapp.network.repository.plant.PlantRepository
 import com.example.plantapp.ui.ViewModelFactory
 import com.example.plantapp.ui.main.MainFragment
 import com.example.plantapp.ui.main.MainFragmentDirections
+import com.example.plantapp.ui.main.specie.SpeciesViewModel
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class HomeFragment : Fragment() {
@@ -26,6 +33,8 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: HomeViewModel
+    private lateinit var viewModelSpecies: SpeciesViewModel
+
     private val plantTypeAdapter = PlantTypeAdapter()
     private val plantCycleAdapter = PlantCycleAdapter()
 
@@ -43,6 +52,7 @@ class HomeFragment : Fragment() {
         val retrofitService = ApiClient.plantService
         val mainRepository = PlantRepository(retrofitService)
         viewModel = ViewModelProvider(this, ViewModelFactory(mainRepository))[HomeViewModel::class.java]
+        viewModelSpecies = ViewModelProvider(requireActivity(), ViewModelFactory(mainRepository))[SpeciesViewModel::class.java]
 
         initData()
         initView()
@@ -56,15 +66,39 @@ class HomeFragment : Fragment() {
             findNavController().navigate(MainFragmentDirections.actionMainFragmentToArticleFragment())
         }
         binding.itemTwo.setOnClickListener {
-            Log.d("setOnClickListener", "onViewCreated: ")
+            findNavController().navigate(R.id.speciesFragment)
         }
     }
 
     private fun initObserve() {
-        viewModel.plants.observe(viewLifecycleOwner) {
-            Log.d("TAG", "initObserve: $it")
+        var indexPage = 1
+        viewModel.plants.observe(viewLifecycleOwner) { plants ->
+            Log.d("TAG", "initObserve: ${plants.size}")
             binding.titlePlantTypes.isVisible = true
-            plantTypeAdapter.submitList(it)
+            plantTypeAdapter.submitList(plants)
+
+//            val db = Firebase.firestore
+//            plants.forEachIndexed { index, plant ->
+//                db.collection("species").document(System.currentTimeMillis().toString())
+//                    .set(plant)
+//                    .addOnSuccessListener {
+//                        Log.d("TAG", "DocumentSnapshot successfully written!")
+//                        if (index == 2) {
+//                            if (indexPage == 100) return@addOnSuccessListener
+//                            val inputStream = resources.openRawResource(R.raw.config)
+//                            val text = inputStream.bufferedReader().use { it.readText() }
+//                            val key = text.substringAfter("=")
+//                            viewModel.getPlant(indexPage, key)
+//                            indexPage++
+//                        }
+//                    }
+//                    .addOnFailureListener { e ->
+//                        Log.w("TAG", "Error writing document", e)
+//                    }
+//
+//            }
+
+
         }
 
         viewModel.cycles.observe(viewLifecycleOwner) {
@@ -92,6 +126,10 @@ class HomeFragment : Fragment() {
         val key = text.substringAfter("=")
         viewModel.getPlant(1, key)
         viewModel.getCycle(3, key)
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            viewModelSpecies.getSpecies()
+        }
     }
 
     override fun onDestroyView() {

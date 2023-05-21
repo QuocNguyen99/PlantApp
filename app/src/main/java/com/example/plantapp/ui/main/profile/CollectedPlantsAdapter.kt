@@ -16,7 +16,7 @@ class CollectedPlantsAdapter:
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(plant: Plant) {
-            Glide.with(binding.root.context).load(plant.default_image.thumbnail).into(binding.imagePlant)
+            Glide.with(binding.root.context).load(plant.default_image?.thumbnail).into(binding.imagePlant)
         }
     }
 

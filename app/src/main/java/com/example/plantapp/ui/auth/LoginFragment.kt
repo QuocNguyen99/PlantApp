@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import java.lang.Exception
 
 class LoginFragment : Fragment() {
 
@@ -59,16 +60,20 @@ class LoginFragment : Fragment() {
                 val isValidEmail = edtEmail.text.toString().isValidEmail()
                 val isValidPassword = edtPassword.text.toString().isValidPassword()
                 if (isValidEmail && isValidPassword) {
-                    auth.signInWithEmailAndPassword(edtEmail.text.toString(), edtPassword.text.toString())
-                        .addOnCompleteListener(requireActivity()) { task ->
-                            if (task.isSuccessful) {
-                                val user = auth.currentUser
-                                findNavController().navigate(R.id.main)
-                            } else {
-                                Log.w("TAG", "signInWithEmail:failure", task.exception)
-                                Toast.makeText(requireContext(), "Authentication failed.", Toast.LENGTH_SHORT).show()
+                    try {
+                        auth.signInWithEmailAndPassword(edtEmail.text.toString(), edtPassword.text.toString())
+                            .addOnCompleteListener(requireActivity()) { task ->
+                                if (task.isSuccessful) {
+                                    val user = auth.currentUser
+                                    findNavController().navigate(R.id.main)
+                                } else {
+                                    Log.e("TAG", "signInWithEmail:failure", task.exception)
+                                    Toast.makeText(requireContext(), "Authentication failed.", Toast.LENGTH_SHORT).show()
+                                }
                             }
-                        }
+                    }catch (ex:Exception){
+                        Log.e("TAG", "signInWithEmail:failure: ${ex.message}")
+                    }
                 }
             }
             tvSignUp.setOnClickListener {

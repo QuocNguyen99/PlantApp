@@ -31,8 +31,8 @@ class PlantTypeAdapter : ListAdapter<Plant, PlantTypeAdapter.PlantViewHolder>(Di
         @SuppressLint("SetTextI18n")
         fun bind(plant: Plant) {
             binding.tvName.text = plant.common_name
-            binding.tvCount.text = plant.default_image.license.toString() + " Types of Plants"
-            Glide.with(binding.root.context).load(plant.default_image.regular_url).into(binding.imgItem)
+            binding.tvCount.text = plant.default_image?.license.toString() + " Types of Plants"
+            Glide.with(binding.root.context).load(plant.default_image?.regular_url).into(binding.imgItem)
         }
     }
 

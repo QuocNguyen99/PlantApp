@@ -55,5 +55,26 @@
         <action
             android:id="@+id/action_mainFragment_to_articleFragment"
             app:destination="@id/articleFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_speciesFragment"
+            app:destination="@id/speciesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/speciesFragment"
+        android:name="com.example.plantapp.ui.main.specie.SpeciesFragment"
+        android:label="fragment_species"
+        tools:layout="@layout/fragment_species" >
+        <action
+            android:id="@+id/action_speciesFragment_to_speciesDetailListFragment"
+            app:destination="@id/speciesDetailListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/speciesDetailListFragment"
+        android:name="com.example.plantapp.ui.main.specie.SpeciesDetailListFragment"
+        android:label="fragment_species_detail_list"
+        tools:layout="@layout/fragment_species_detail_list" >
+        <argument
+            android:name="type"
+            app:argType="string" />
     </fragment>
 </navigation>

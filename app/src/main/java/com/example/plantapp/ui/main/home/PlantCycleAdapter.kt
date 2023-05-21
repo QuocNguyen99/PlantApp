@@ -32,7 +32,7 @@ class PlantCycleAdapter : ListAdapter<Plant, PlantCycleAdapter.PlantViewHolder>(
         @SuppressLint("SetTextI18n")
         fun bind(plant: Plant) {
             binding.title.text = "#" + plant.cycle
-            Glide.with(binding.root.context).load(plant.default_image.thumbnail).into(binding.imgItem)
+            Glide.with(binding.root.context).load(plant.default_image?.thumbnail).into(binding.imgItem)
         }
     }
 
