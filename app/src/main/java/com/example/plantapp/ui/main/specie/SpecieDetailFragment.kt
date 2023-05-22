@@ -61,6 +61,7 @@ class SpecieDetailFragment : Fragment() {
         val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE) ?: return
         var liked = sharedPref.getString("liked", "")
 
+
         viewModel.specieDetailList.observe(viewLifecycleOwner) {
             if (id == -1) return@observe
             val detail = it.find { item -> item.id == id } ?: return@observe
