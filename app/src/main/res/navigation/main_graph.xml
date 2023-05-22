@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+   <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     app:startDestination="@id/mainFragment">
+
     <fragment
         android:id="@+id/homeFragment2"
         android:name="com.example.plantapp.ui.main.home.HomeFragment"
@@ -16,6 +17,7 @@
             android:id="@+id/action_homeFragment2_to_articleFragment"
             app:destination="@id/articleFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/profileFragment2"
         android:name="com.example.plantapp.ui.main.profile.ProfileFragment"
@@ -28,6 +30,7 @@
             android:id="@+id/action_profileFragment2_to_articleDetailFragment"
             app:destination="@id/articleDetailFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/articleFragment"
         android:name="com.example.plantapp.ui.main.article.ArticleFragment"
@@ -36,6 +39,7 @@
             android:id="@+id/action_articleFragment_to_articleDetailFragment"
             app:destination="@id/articleDetailFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/articleDetailFragment"
         android:name="com.example.plantapp.ui.main.article.ArticleDetailFragment"
@@ -44,6 +48,7 @@
             android:name="article"
             app:argType="com.example.plantapp.data.model.Article" />
     </fragment>
+
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.example.plantapp.ui.main.MainFragment"
@@ -58,23 +63,41 @@
         <action
             android:id="@+id/action_mainFragment_to_speciesFragment"
             app:destination="@id/speciesFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_specieDetailFragment"
+            app:destination="@id/specieDetailFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/speciesFragment"
         android:name="com.example.plantapp.ui.main.specie.SpeciesFragment"
         android:label="fragment_species"
-        tools:layout="@layout/fragment_species" >
+        tools:layout="@layout/fragment_species">
         <action
             android:id="@+id/action_speciesFragment_to_speciesDetailListFragment"
             app:destination="@id/speciesDetailListFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/speciesDetailListFragment"
         android:name="com.example.plantapp.ui.main.specie.SpeciesDetailListFragment"
         android:label="fragment_species_detail_list"
-        tools:layout="@layout/fragment_species_detail_list" >
+        tools:layout="@layout/fragment_species_detail_list">
         <argument
             android:name="type"
             app:argType="string" />
+        <action
+            android:id="@+id/action_speciesDetailListFragment_to_specieDetailFragment"
+            app:destination="@id/specieDetailFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/specieDetailFragment"
+        android:name="com.example.plantapp.ui.main.specie.SpecieDetailFragment"
+        android:label="SpecieDetailFragment">
+        <argument
+            android:name="id"
+            app:argType="integer" />
+    </fragment>
+
+
 </navigation>

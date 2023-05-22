@@ -101,7 +101,6 @@
         app:layout_constraintStart_toStartOf="@id/title"
         app:layout_constraintTop_toBottomOf="@id/cycle" />
 
-
     <TextView
         android:id="@+id/description"
         android:layout_width="0dp"

@@ -8,4 +8,7 @@
     </style>
 
     <style name="Theme.PlantApp" parent="Base.Theme.PlantApp" />
+    <style name="customRatingBar" parent="Widget.AppCompat.RatingBar.Indicator">
+        <item name="android:progressDrawable">@drawable/customratingstars</item>
+    </style>
 </resources>

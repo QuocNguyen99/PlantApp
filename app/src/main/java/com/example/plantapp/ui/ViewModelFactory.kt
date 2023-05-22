@@ -15,7 +15,7 @@ class ViewModelFactory constructor(
     private val articleRepository: ArticleRepository? = null,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return when(modelClass) {
+        return when (modelClass) {
             HomeViewModel::class.java -> {
                 if (plantRepository == null) {
                     throw IllegalArgumentException("plantRepository == null")
@@ -25,10 +25,10 @@ class ViewModelFactory constructor(
             }
 
             ProfileViewModel::class.java -> {
-                if (articleRepository == null) {
+                if (articleRepository == null && plantRepository == null) {
                     throw IllegalArgumentException("articleRepository == null")
                 } else {
-                    ProfileViewModel(articleRepository) as T
+                    ProfileViewModel(articleRepository!!, plantRepository!!) as T
                 }
             }
 

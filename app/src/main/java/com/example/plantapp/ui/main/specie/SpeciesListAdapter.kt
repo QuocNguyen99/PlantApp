@@ -12,7 +12,7 @@ import com.example.plantapp.databinding.ItemSpecieListBinding
 
 class SpeciesListAdapter : ListAdapter<DetailSpecie, SpeciesListAdapter.SpeciesViewHolder>(SpeciesDiffCallback()) {
 
-    var onItemClick: ((id: Int) -> Unit)? = null
+    var onItemClick: ((detail: DetailSpecie) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SpeciesViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -40,7 +40,7 @@ class SpeciesListAdapter : ListAdapter<DetailSpecie, SpeciesListAdapter.SpeciesV
                         "wide range of shapes and sizes. Most cacti live " +
                         "in habitats subject to at least some drought. "
 
-                root.setOnClickListener { onItemClick?.invoke(detailSpecie.id) }
+                root.setOnClickListener { onItemClick?.invoke(detailSpecie) }
             }
         }
     }

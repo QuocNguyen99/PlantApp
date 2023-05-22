@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -34,8 +33,7 @@ class SpeciesDetailListFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentSpeciesDetailListBinding.inflate(inflater, container, false)
         return binding.root
@@ -63,6 +61,7 @@ class SpeciesDetailListFragment : Fragment() {
         }
 
         viewModel.specieDetailList.observe(viewLifecycleOwner) {
+            if (it.size == 0) return@observe
             Log.d("TAG", "specieDetailList: ${it.size}")
             val newList = it.toMutableList()
             adapter.submitList(newList)
@@ -71,7 +70,9 @@ class SpeciesDetailListFragment : Fragment() {
     }
 
     private fun initEvent() {
-
+        adapter.onItemClick = {
+            findNavController().navigate(SpeciesDetailListFragmentDirections.actionSpeciesDetailListFragmentToSpecieDetailFragment(it.id))
+        }
     }
 
     private fun initView() {

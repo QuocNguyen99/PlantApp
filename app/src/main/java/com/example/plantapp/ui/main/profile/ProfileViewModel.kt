@@ -1,25 +1,53 @@
 package com.example.plantapp.ui.main.profile
 
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.plantapp.data.model.Article
+import com.example.plantapp.data.model.DetailSpecie
+import com.example.plantapp.data.model.Specie
 import com.example.plantapp.data.response.Plant
 import com.example.plantapp.network.repository.article.ArticleRepository
+import com.example.plantapp.network.repository.plant.PlantRepository
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class ProfileViewModel(private val articleRepository: ArticleRepository): ViewModel() {
+class ProfileViewModel(private val articleRepository: ArticleRepository, private val plantRepository: PlantRepository) : ViewModel() {
 
-    private val _collectedPlants = MutableLiveData<MutableList<Plant>>()
-    val collectedPlants : LiveData<MutableList<Plant>> = _collectedPlants
+    private val _collectedPlants = MutableLiveData<MutableList<DetailSpecie>>()
+    val collectedPlants: LiveData<MutableList<DetailSpecie>> = _collectedPlants
+
+     val itemDetail = MutableLiveData<DetailSpecie>()
 
     private val _collectedArticles = MutableLiveData<MutableList<Article>>()
-    val collectedArticles : LiveData<MutableList<Article>> = _collectedArticles
+    val collectedArticles: LiveData<MutableList<Article>> = _collectedArticles
     private val _email = Firebase.auth.currentUser?.email ?: ""
 
-    fun getCollectedPlants() {
-
+    fun getCollectedPlants(liked: String, key: String) {
+        val list = liked.trim().split(" ")
+        _collectedPlants.value = mutableListOf()
+        list.forEach {
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
+                    it.let {
+                        val data = plantRepository.getDetailSpecie(it.trim().toInt(), key)
+                        Log.d("TAG", "getDetailSpecies: ${data.id}")
+                        val tempList = _collectedPlants.value
+                        tempList!!.add(data)
+                        tempList.let { listTemp ->
+                            _collectedPlants.postValue(listTemp)
+                        }
+                    }
+                } catch (ex: Exception) {
+                    Log.e("TAG", "getDetailSpecies: ${ex.message}")
+                }
+            }
+        }
     }
 
     fun getCollectedArticle() {
