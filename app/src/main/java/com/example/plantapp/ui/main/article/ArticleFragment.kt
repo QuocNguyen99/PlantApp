@@ -6,10 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.plantapp.databinding.FragmentArticleBinding
-import com.example.plantapp.network.repository.article.ArticleRepository
+import com.example.plantapp.network.repository.article.FireStoreRepository
 import com.example.plantapp.ui.ViewModelFactory
 
 class ArticleFragment : Fragment() {
@@ -31,7 +30,7 @@ class ArticleFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory(articleRepository = ArticleRepository())
+            ViewModelFactory(fireStoreRepository = FireStoreRepository())
         )[ArticleViewModel::class.java]
         initEvent()
         initData()

@@ -5,14 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.plantapp.data.model.Article
-import com.example.plantapp.data.response.Plant
-import com.example.plantapp.network.repository.article.ArticleRepository
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.example.plantapp.network.repository.article.FireStoreRepository
 
 class ArticleDetailViewModel(
-    private val articleRepository: ArticleRepository
+    private val fireStoreRepository: FireStoreRepository
 ): ViewModel() {
 
     var article: Article? = null
@@ -23,7 +19,7 @@ class ArticleDetailViewModel(
     fun setLikedArticle(isLiked: Boolean) {
         article?.apply {
             _likeCompleted.value = false
-            articleRepository.likedArticle(id, isLiked,
+            fireStoreRepository.likedArticle(id, isLiked,
                 onSuccess = {
                     _likeCompleted.value = true
                     Log.d("CheckApp", "Like success")

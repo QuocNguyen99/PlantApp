@@ -4,20 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.plantapp.data.model.Article
-import com.example.plantapp.data.response.Plant
-import com.example.plantapp.network.repository.article.ArticleRepository
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.example.plantapp.network.repository.article.FireStoreRepository
 
 class ArticleViewModel(
-    private val articleRepository: ArticleRepository
+    private val fireStoreRepository: FireStoreRepository
 ): ViewModel() {
 
     private val _articles = MutableLiveData<List<Article?>>()
     val articles : LiveData<List<Article?>> = _articles
 
     fun getArticles() {
-        articleRepository.getArticles(
+        fireStoreRepository.getArticles(
             {
                 _articles.value = it
             },
@@ -28,7 +25,7 @@ class ArticleViewModel(
     }
 
     fun setLikedArticle(articleId: String, isLiked: Boolean) {
-        articleRepository.likedArticle(articleId, isLiked,
+        fireStoreRepository.likedArticle(articleId, isLiked,
         onSuccess = {
             getArticles()
         },

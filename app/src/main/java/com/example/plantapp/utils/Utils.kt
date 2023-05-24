@@ -1,7 +1,10 @@
 package com.example.plantapp.utils
 
+import android.content.Context
+import android.content.pm.PackageManager
 import android.text.TextUtils
 import android.util.Patterns
+import androidx.core.app.ActivityCompat
 import com.google.firebase.Timestamp
 import java.text.SimpleDateFormat
 import java.util.regex.Matcher
@@ -26,4 +29,8 @@ fun String.isValidPassword(): Boolean {
 fun Timestamp.format(): String {
     val simpleDateFormat = SimpleDateFormat("yyyy . MM . dd")
     return simpleDateFormat.format(toDate())
+}
+
+fun Context.hasPermissions(vararg permissions: String): Boolean = permissions.all {
+    ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
 }

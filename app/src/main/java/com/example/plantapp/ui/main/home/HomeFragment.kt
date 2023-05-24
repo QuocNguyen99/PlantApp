@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -18,11 +17,8 @@ import com.example.plantapp.databinding.FragmentHomeBinding
 import com.example.plantapp.network.ApiClient
 import com.example.plantapp.network.repository.plant.PlantRepository
 import com.example.plantapp.ui.ViewModelFactory
-import com.example.plantapp.ui.main.MainFragment
 import com.example.plantapp.ui.main.MainFragmentDirections
 import com.example.plantapp.ui.main.specie.SpeciesViewModel
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -59,8 +55,9 @@ class HomeFragment : Fragment() {
         initObserve()
 
         binding.itemOne.setOnClickListener {
-            Log.d("setOnClickListener", "onViewCreated: ")
+            findNavController().navigate(MainFragmentDirections.actionMainFragmentToAddPlantFragment())
         }
+
         binding.itemThree.setOnClickListener {
             Log.d("setOnClickListener", "onViewCreated: ")
             findNavController().navigate(MainFragmentDirections.actionMainFragmentToArticleFragment())

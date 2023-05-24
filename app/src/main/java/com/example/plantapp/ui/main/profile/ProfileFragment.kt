@@ -11,17 +11,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.plantapp.R
-import com.example.plantapp.databinding.FragmentHomeBinding
 import com.example.plantapp.databinding.FragmentProfileBinding
 import com.example.plantapp.network.ApiClient
-import com.example.plantapp.network.repository.article.ArticleRepository
+import com.example.plantapp.network.repository.article.FireStoreRepository
 import com.example.plantapp.network.repository.plant.PlantRepository
 import com.example.plantapp.ui.ViewModelFactory
 import com.example.plantapp.ui.main.MainFragmentDirections
 import com.example.plantapp.ui.main.article.ArticleAdapter
-import com.example.plantapp.ui.main.article.ArticleDetailFragmentArgs
-import com.example.plantapp.ui.main.article.ArticleFragmentDirections
-import com.example.plantapp.ui.main.home.HomeViewModel
 
 class ProfileFragment : Fragment() {
 
@@ -48,7 +44,7 @@ class ProfileFragment : Fragment() {
         val mainRepository = PlantRepository(service)
         viewModel = ViewModelProvider(
             requireActivity(),
-            ViewModelFactory(mainRepository, articleRepository = ArticleRepository())
+            ViewModelFactory(mainRepository, fireStoreRepository = FireStoreRepository())
         )[ProfileViewModel::class.java]
 
         val inputStream = resources.openRawResource(R.raw.config)

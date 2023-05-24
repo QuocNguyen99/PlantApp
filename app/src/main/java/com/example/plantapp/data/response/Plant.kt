@@ -1,12 +1,12 @@
 package com.example.plantapp.data.response
 
 data class Plant(
-    val common_name: String = "",
-    val cycle: String = "",
-    val default_image: DefaultImage? = null,
-    val id: Int = -1,
-    val other_name: List<String>? = null,
-    val scientific_name: List<String>? = null,
-    val sunlight: List<Any>? = null,
-    val watering: String = ""
+    var common_name: String = "",
+    var cycle: String = "",
+    var default_image: DefaultImage? = null,
+    var id: Int = -1,
+    var other_name: List<String>? = null,
+    var scientific_name: List<String>? = null,
+    var sunlight: List<Any>? = null,
+    var watering: String = ""
 )

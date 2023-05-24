@@ -1,6 +1,5 @@
 package com.example.plantapp.ui.main.article
 
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -18,7 +17,7 @@ import com.bumptech.glide.Glide
 import com.example.plantapp.R
 import com.example.plantapp.data.model.Article
 import com.example.plantapp.databinding.FragmentArticleDetailBinding
-import com.example.plantapp.network.repository.article.ArticleRepository
+import com.example.plantapp.network.repository.article.FireStoreRepository
 import com.example.plantapp.ui.ViewModelFactory
 import com.example.plantapp.utils.format
 import com.google.firebase.auth.ktx.auth
@@ -49,7 +48,7 @@ class ArticleDetailFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(
             this,
-            ViewModelFactory(articleRepository = ArticleRepository())
+            ViewModelFactory(fireStoreRepository = FireStoreRepository())
         )[ArticleDetailViewModel::class.java]
         viewModel.article = article
         initEvent()

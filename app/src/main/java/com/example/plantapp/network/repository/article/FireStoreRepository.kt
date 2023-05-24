@@ -1,12 +1,23 @@
 package com.example.plantapp.network.repository.article
 
+import android.graphics.Bitmap
+import android.net.Uri
 import android.util.Log
+import androidx.camera.core.SurfaceRequest.Result.ResultCode
 import com.example.plantapp.data.model.Article
+import com.example.plantapp.data.response.DefaultImage
+import com.example.plantapp.data.response.Plant
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.util.Date
 
-class ArticleRepository {
+
+class FireStoreRepository {
     private val TAG = "ArticleRepository"
 
     private val _db = Firebase.firestore
@@ -40,6 +51,7 @@ class ArticleRepository {
             onSuccess?.invoke(articles)
         }
     }
+
     fun getArticles(
         onSuccess: ((articles: List<Article?>) -> Unit)? = null,
         onError: ((exception: Exception) -> Unit)? = null
@@ -133,5 +145,66 @@ class ArticleRepository {
             .addOnFailureListener {
                 onError?.invoke(it)
             }
+    }
+
+    fun setPlant(
+        plant: Plant,
+        bitmap: Bitmap,
+        onSuccess: ((plant: Plant) -> Unit)? = null,
+        onError: ((exception: Exception) -> Unit)? = null
+    ) {
+        updatePlantImage(bitmap = bitmap, onError = onError, onSuccess = {
+            val defaultImage = DefaultImage()
+            defaultImage.license_name = it
+            defaultImage.license_url = it
+            defaultImage.medium_url = it
+            defaultImage.original_url = it
+            defaultImage.regular_url = it
+            defaultImage.small_url = it
+            defaultImage.thumbnail = it
+            defaultImage.license = 2
+            plant.default_image = defaultImage
+            val docRef = _db.collection("species").document(Date().time.toString())
+            docRef.set(plant)
+                .addOnSuccessListener {
+                    onSuccess?.invoke(plant)
+                }
+                .addOnFailureListener {
+                    onError?.invoke(it)
+                }
+        })
+    }
+
+    private fun updatePlantImage(
+        bitmap: Bitmap,
+        onSuccess: ((url: String) -> Unit)? = null,
+        onError: ((exception: Exception) -> Unit)? = null
+    ) {
+
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos)
+        val data = baos.toByteArray()
+
+        val imageName = Date().time.toString() + ".jpg"
+        val storageRef: StorageReference = Firebase.storage.reference
+        val imagesRef: StorageReference = storageRef.child(imageName)
+        imagesRef.putBytes(data)
+            .continueWithTask { task ->
+                if (!task.isSuccessful) {
+                    onError?.invoke(Exception("Error upload image"))
+                }
+                imagesRef.downloadUrl
+            }
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val downloadUri: Uri = task.result
+                    // Create a reference to a file from a Google Cloud Storage URI
+                    onSuccess?.invoke(downloadUri.toString())
+                    Log.d(TAG, downloadUri.toString())
+                } else {
+                    onError?.invoke(Exception(task.exception.toString()))
+                }
+            }
+
     }
 }

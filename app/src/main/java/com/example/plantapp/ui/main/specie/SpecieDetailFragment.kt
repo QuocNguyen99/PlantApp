@@ -12,11 +12,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.plantapp.R
-import com.example.plantapp.data.model.DetailSpecie
 import com.example.plantapp.databinding.FragmentSpecieDetailBinding
-import com.example.plantapp.databinding.FragmentSpeciesDetailListBinding
 import com.example.plantapp.network.ApiClient
-import com.example.plantapp.network.repository.article.ArticleRepository
+import com.example.plantapp.network.repository.article.FireStoreRepository
 import com.example.plantapp.network.repository.plant.PlantRepository
 import com.example.plantapp.ui.ViewModelFactory
 import com.example.plantapp.ui.main.profile.ProfileViewModel
@@ -55,7 +53,7 @@ class SpecieDetailFragment : Fragment() {
 
         profileViewModel = ViewModelProvider(
             requireActivity(),
-            ViewModelFactory(mainRepository, articleRepository = ArticleRepository())
+            ViewModelFactory(mainRepository, fireStoreRepository = FireStoreRepository())
         )[ProfileViewModel::class.java]
 
         val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE) ?: return
