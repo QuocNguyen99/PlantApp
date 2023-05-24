@@ -66,6 +66,9 @@
         <action
             android:id="@+id/action_mainFragment_to_specieDetailFragment"
             app:destination="@id/specieDetailFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_addPlantFragment"
+            app:destination="@id/addPlantFragment" />
     </fragment>
 
     <fragment
@@ -98,6 +101,10 @@
             android:name="id"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/addPlantFragment"
+        android:name="com.example.plantapp.ui.add_plants.AddPlantFragment"
+        android:label="AddPlantFragment" />
 
 
 </navigation>

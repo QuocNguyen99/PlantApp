@@ -2,8 +2,9 @@ package com.example.plantapp.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.plantapp.network.repository.article.ArticleRepository
+import com.example.plantapp.network.repository.article.FireStoreRepository
 import com.example.plantapp.network.repository.plant.PlantRepository
+import com.example.plantapp.ui.add_plants.AddPlantViewModel
 import com.example.plantapp.ui.main.article.ArticleDetailViewModel
 import com.example.plantapp.ui.main.article.ArticleViewModel
 import com.example.plantapp.ui.main.home.HomeViewModel
@@ -12,7 +13,7 @@ import com.example.plantapp.ui.main.specie.SpeciesViewModel
 
 class ViewModelFactory constructor(
     private val plantRepository: PlantRepository? = null,
-    private val articleRepository: ArticleRepository? = null,
+    private val fireStoreRepository: FireStoreRepository? = null,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when (modelClass) {
@@ -24,27 +25,35 @@ class ViewModelFactory constructor(
                 }
             }
 
+            AddPlantViewModel::class.java -> {
+                if (fireStoreRepository == null) {
+                    throw IllegalArgumentException("fireStoreRepository == null")
+                } else {
+                    AddPlantViewModel(fireStoreRepository) as T
+                }
+            }
+
             ProfileViewModel::class.java -> {
-                if (articleRepository == null && plantRepository == null) {
+                if (fireStoreRepository == null && plantRepository == null) {
                     throw IllegalArgumentException("articleRepository == null")
                 } else {
-                    ProfileViewModel(articleRepository!!, plantRepository!!) as T
+                    ProfileViewModel(fireStoreRepository!!, plantRepository!!) as T
                 }
             }
 
             ArticleViewModel::class.java -> {
-                if (articleRepository == null) {
+                if (fireStoreRepository == null) {
                     throw IllegalArgumentException("articleRepository == null")
                 } else {
-                    ArticleViewModel(articleRepository) as T
+                    ArticleViewModel(fireStoreRepository) as T
                 }
             }
 
             ArticleDetailViewModel::class.java -> {
-                if (articleRepository == null) {
+                if (fireStoreRepository == null) {
                     throw IllegalArgumentException("plantRepository == null")
                 } else {
-                    ArticleDetailViewModel(articleRepository) as T
+                    ArticleDetailViewModel(fireStoreRepository) as T
                 }
             }
 

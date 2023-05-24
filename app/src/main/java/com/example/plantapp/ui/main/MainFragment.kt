@@ -13,6 +13,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.example.plantapp.R
 import com.example.plantapp.databinding.FragmentMainBinding
@@ -69,9 +70,7 @@ class MainFragment : Fragment() {
             })
 
             fab.setOnClickListener {
-                binding.close.isVisible = true
-                binding.fab.isVisible = false
-                startCamera()
+                findNavController().navigate(MainFragmentDirections.actionMainFragmentToAddPlantFragment())
             }
 
             close.setOnClickListener { stopCamera() }

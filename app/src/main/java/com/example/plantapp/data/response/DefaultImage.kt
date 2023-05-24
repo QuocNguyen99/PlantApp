@@ -1,12 +1,12 @@
 package com.example.plantapp.data.response
 
 data class DefaultImage(
-    val license: Int=-1,
-    val license_name: String="",
-    val license_url: String="",
-    val medium_url: String="",
-    val original_url: String="",
-    val regular_url: String="",
-    val small_url: String="",
-    val thumbnail: String=""
+    var license: Int=-1,
+    var license_name: String="",
+    var license_url: String="",
+    var medium_url: String="",
+    var original_url: String="",
+    var regular_url: String="",
+    var small_url: String="",
+    var thumbnail: String=""
 )

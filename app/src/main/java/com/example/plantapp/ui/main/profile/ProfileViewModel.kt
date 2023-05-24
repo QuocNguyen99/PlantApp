@@ -1,6 +1,5 @@
 package com.example.plantapp.ui.main.profile
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,16 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.plantapp.data.model.Article
 import com.example.plantapp.data.model.DetailSpecie
-import com.example.plantapp.data.model.Specie
-import com.example.plantapp.data.response.Plant
-import com.example.plantapp.network.repository.article.ArticleRepository
+import com.example.plantapp.network.repository.article.FireStoreRepository
 import com.example.plantapp.network.repository.plant.PlantRepository
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class ProfileViewModel(private val articleRepository: ArticleRepository, private val plantRepository: PlantRepository) : ViewModel() {
+class ProfileViewModel(private val fireStoreRepository: FireStoreRepository, private val plantRepository: PlantRepository) : ViewModel() {
 
     private val _collectedPlants = MutableLiveData<MutableList<DetailSpecie>>()
     val collectedPlants: LiveData<MutableList<DetailSpecie>> = _collectedPlants
@@ -51,7 +48,7 @@ class ProfileViewModel(private val articleRepository: ArticleRepository, private
     }
 
     fun getCollectedArticle() {
-        articleRepository.getArticlesRealTime(
+        fireStoreRepository.getArticlesRealTime(
             onSuccess = {
                 val collected = mutableListOf<Article>()
                 it.forEach { article ->
@@ -70,7 +67,7 @@ class ProfileViewModel(private val articleRepository: ArticleRepository, private
     }
 
     fun setLikedArticle(articleId: String, isLiked: Boolean) {
-        articleRepository.likedArticle(articleId, isLiked,
+        fireStoreRepository.likedArticle(articleId, isLiked,
             onSuccess = {
                 getCollectedArticle()
             },
