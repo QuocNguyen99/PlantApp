@@ -162,6 +162,7 @@ class FireStoreRepository {
             defaultImage.regular_url = it
             defaultImage.small_url = it
             defaultImage.thumbnail = it
+            defaultImage.license = 2
             plant.default_image = defaultImage
             val docRef = _db.collection("species").document(Date().time.toString())
             docRef.set(plant)

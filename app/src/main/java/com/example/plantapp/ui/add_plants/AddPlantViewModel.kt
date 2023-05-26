@@ -9,6 +9,7 @@ import com.example.plantapp.data.response.Plant
 import com.example.plantapp.network.repository.article.FireStoreRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.Date
 
 class AddPlantViewModel(
     private val fireStoreRepository: FireStoreRepository
@@ -25,8 +26,12 @@ class AddPlantViewModel(
     fun addPlant(name: String, cycle: String, watering: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val plant = Plant()
+            plant.scientific_name = mutableListOf(name)
+            plant.other_name = mutableListOf(name)
+            plant.sunlight = mutableListOf("")
             plant.common_name = name
             plant.cycle = cycle
+            plant.id = Date().time.toInt()
             plant.watering = watering
             bitmap?.let { bm ->
                 fireStoreRepository.setPlant(
