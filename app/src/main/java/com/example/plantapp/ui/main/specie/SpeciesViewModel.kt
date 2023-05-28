@@ -28,24 +28,37 @@ class SpeciesViewModel(var plantRepository: PlantRepository? = null) : ViewModel
         db.collection("species")
             .get()
             .addOnSuccessListener { documents ->
-                val newList = mutableListOf<Specie>()
-                Log.d("TAG", "initData ${documents.size()}")
-                for (document in documents) {
-                    val index = document.data["scientific_name"].toString().indexOf(" ")
-                    val type = document.data["scientific_name"].toString().substring(1, index)
-                    newList.add(
-                        Specie(
-                            type,
-                            document.data["scientific_name"].toString().toCharArray()[1].toString(),
-                            document.toObject()
+                try {
+                    val newList = mutableListOf<Specie>()
+                    Log.d("TAG", "initData ${documents.size()}")
+                    for (document in documents) {
+                        Log.d("TAG", "document.id: ${document.data["id"]}")
+                        val index = document.data["scientific_name"].toString().indexOf(" ")
+                        val type = if (index == -1) {
+                            document.data["scientific_name"].toString()
+                                .substring(1, document.data["scientific_name"].toString().toCharArray().size - 1)
+                        } else {
+                            document.data["scientific_name"].toString().substring(1, index)
+                        }
+                        Log.d("TAG", "type: $type")
+                        newList.add(
+                            Specie(
+                                type,
+                                document.data["scientific_name"].toString().toCharArray()[1].toString().uppercase(),
+                                document.toObject()
+                            )
                         )
-                    )
+                    }
+                    val sortedList = newList.sortedWith(compareBy { it.alphabet })
+                    viewModelScope.launch(Dispatchers.Main.immediate) {
+                        _species.postValue(sortedList.toMutableList())
+                    }
+                } catch (ex: Exception) {
+                    Log.e("TAG", "getSpeciesError: ${ex.cause}")
                 }
-                val sortedList = newList.sortedWith(compareBy { it.type })
-                _species.postValue(sortedList.toMutableList())
             }
             .addOnFailureListener { exception ->
-                Log.w("TAG", "Error getting documents: ", exception)
+                Log.w("TAG", "Error getting documents: ${exception.cause}", exception)
             }
     }
 

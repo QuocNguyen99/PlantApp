@@ -1,5 +1,6 @@
 package com.example.plantapp.ui.main.home
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -21,6 +22,7 @@ import com.example.plantapp.ui.main.MainFragmentDirections
 import com.example.plantapp.ui.main.specie.SpeciesViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class HomeFragment : Fragment() {
@@ -68,12 +70,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun initObserve() {
-        var indexPage = 1
         viewModel.plants.observe(viewLifecycleOwner) { plants ->
-            Log.d("TAG", "initObserve: ${plants.size}")
+            Log.d("HomeFragment", "initObserve: ${plants.size}")
             binding.titlePlantTypes.isVisible = true
             plantTypeAdapter.submitList(plants)
-
+            binding.progressBar.isVisible = false
+            binding.root.isEnabled = true
 //            val db = Firebase.firestore
 //            plants.forEachIndexed { index, plant ->
 //                db.collection("species").document(System.currentTimeMillis().toString())
@@ -92,10 +94,7 @@ class HomeFragment : Fragment() {
 //                    .addOnFailureListener { e ->
 //                        Log.w("TAG", "Error writing document", e)
 //                    }
-//
 //            }
-
-
         }
 
         viewModel.cycles.observe(viewLifecycleOwner) {
@@ -125,8 +124,11 @@ class HomeFragment : Fragment() {
         viewModel.getCycle(3, key)
 
         lifecycleScope.launch(Dispatchers.IO) {
-            //TODO: Check chỗ này bị lỗi
-//            viewModelSpecies.getSpecies()
+            viewModelSpecies.getSpecies()
+            withContext(Dispatchers.Main) {
+                binding.progressBar.isVisible = true
+                binding.root.isEnabled = false
+            }
         }
     }
 

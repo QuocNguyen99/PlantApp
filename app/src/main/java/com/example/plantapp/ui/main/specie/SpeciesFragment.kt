@@ -37,8 +37,7 @@ class SpeciesFragment : Fragment() {
 
     private val adapter = SpeciesAdapter()
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentSpeciesBinding.inflate(inflater, container, false)
         return binding.root
@@ -57,6 +56,7 @@ class SpeciesFragment : Fragment() {
 
     private fun initObserve() {
         viewModel.species.observe(viewLifecycleOwner) {
+            if (it.size == 0) return@observe
             val listWithOutDuplicate = mutableListOf<Specie>()
             it.forEachIndexed { index, specie ->
                 specie?.let { item ->

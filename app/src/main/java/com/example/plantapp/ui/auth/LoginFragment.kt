@@ -16,6 +16,7 @@ import com.example.plantapp.utils.isValidPassword
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.lang.Exception
 
@@ -65,13 +66,25 @@ class LoginFragment : Fragment() {
                             .addOnCompleteListener(requireActivity()) { task ->
                                 if (task.isSuccessful) {
                                     val user = auth.currentUser
-                                    findNavController().navigate(R.id.main)
+                                    val db = Firebase.firestore
+                                    db.collection("auth")
+                                        .whereEqualTo("email", user?.email)
+                                        .get()
+                                        .addOnSuccessListener { documents ->
+                                            for (document in documents) {
+                                                Log.d("TAG", "${document.id} => ${document.data}")
+                                            }
+                                            findNavController().navigate(R.id.main)
+                                        }
+                                        .addOnFailureListener { exception ->
+                                            Log.w("TAG", "Error getting documents: ", exception)
+                                        }
                                 } else {
                                     Log.e("TAG", "signInWithEmail:failure", task.exception)
                                     Toast.makeText(requireContext(), "Authentication failed.", Toast.LENGTH_SHORT).show()
                                 }
                             }
-                    }catch (ex:Exception){
+                    } catch (ex: Exception) {
                         Log.e("TAG", "signInWithEmail:failure: ${ex.message}")
                     }
                 }

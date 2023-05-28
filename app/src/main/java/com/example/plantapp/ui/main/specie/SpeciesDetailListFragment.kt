@@ -52,6 +52,7 @@ class SpeciesDetailListFragment : Fragment() {
 
     private fun initData() {
         viewModel.species.observe(viewLifecycleOwner) { list ->
+            if (list.size == 0) return@observe
             Log.d("TAG", "specieDetailListspecies: ${list.size}")
             val inputStream = resources.openRawResource(R.raw.config)
             val text = inputStream.bufferedReader().use { it.readText() }

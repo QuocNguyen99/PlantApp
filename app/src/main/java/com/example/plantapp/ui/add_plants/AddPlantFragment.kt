@@ -94,7 +94,7 @@ class AddPlantFragment : Fragment() {
             it.isEnabled = false
             viewModel.addPlant(binding.edtName.text.toString(),
                 binding.spinnerCycle.selectedItem.toString(),
-                binding.spinnerWatering.selectedItem.toString())
+                binding.spinnerWatering.selectedItem.toString(),)
         }
 
         binding.image.callOnClick()

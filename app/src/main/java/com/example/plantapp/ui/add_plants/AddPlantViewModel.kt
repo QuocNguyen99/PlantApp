@@ -18,10 +18,10 @@ class AddPlantViewModel(
     var bitmap: Bitmap? = null
 
     private val _saveCompleted = MutableLiveData<Boolean>(false)
-    val saveCompleted : LiveData<Boolean> = _saveCompleted
+    val saveCompleted: LiveData<Boolean> = _saveCompleted
 
     private val _error = MutableLiveData("")
-    val error : LiveData<String> = _error
+    val error: LiveData<String> = _error
 
     fun addPlant(name: String, cycle: String, watering: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -29,7 +29,7 @@ class AddPlantViewModel(
             plant.scientific_name = mutableListOf(name)
             plant.other_name = mutableListOf(name)
             plant.sunlight = mutableListOf("")
-            plant.common_name = name
+            plant.scientific_name = listOf(name)
             plant.cycle = cycle
             plant.id = Date().time.toInt()
             plant.watering = watering
