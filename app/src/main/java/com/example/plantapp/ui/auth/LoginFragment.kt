@@ -1,5 +1,6 @@
 package com.example.plantapp.ui.auth
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -18,7 +19,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import java.lang.Exception
+import kotlin.Exception
 
 class LoginFragment : Fragment() {
 
@@ -72,12 +73,13 @@ class LoginFragment : Fragment() {
                                         .get()
                                         .addOnSuccessListener { documents ->
                                             for (document in documents) {
-                                                Log.d("TAG", "${document.id} => ${document.data}")
+                                                val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+                                                with(sharedPref.edit()) {
+                                                    putString("fullname", document.data["fullname"].toString())
+                                                    apply()
+                                                }
+                                                findNavController().navigate(R.id.main)
                                             }
-                                            findNavController().navigate(R.id.main)
-                                        }
-                                        .addOnFailureListener { exception ->
-                                            Log.w("TAG", "Error getting documents: ", exception)
                                         }
                                 } else {
                                     Log.e("TAG", "signInWithEmail:failure", task.exception)

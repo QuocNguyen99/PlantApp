@@ -1,6 +1,8 @@
 package com.example.plantapp.ui.main.home
 
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,6 +22,8 @@ import com.example.plantapp.network.repository.plant.PlantRepository
 import com.example.plantapp.ui.ViewModelFactory
 import com.example.plantapp.ui.main.MainFragmentDirections
 import com.example.plantapp.ui.main.specie.SpeciesViewModel
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -69,32 +73,32 @@ class HomeFragment : Fragment() {
         }
     }
 
+    var indexPage = 1
     private fun initObserve() {
         viewModel.plants.observe(viewLifecycleOwner) { plants ->
             Log.d("HomeFragment", "initObserve: ${plants.size}")
             binding.titlePlantTypes.isVisible = true
             plantTypeAdapter.submitList(plants)
-            binding.progressBar.isVisible = false
-            binding.root.isEnabled = true
 //            val db = Firebase.firestore
 //            plants.forEachIndexed { index, plant ->
+//                if (index == 2) return@forEachIndexed
 //                db.collection("species").document(System.currentTimeMillis().toString())
 //                    .set(plant)
 //                    .addOnSuccessListener {
 //                        Log.d("TAG", "DocumentSnapshot successfully written!")
-//                        if (index == 2) {
-//                            if (indexPage == 100) return@addOnSuccessListener
-//                            val inputStream = resources.openRawResource(R.raw.config)
-//                            val text = inputStream.bufferedReader().use { it.readText() }
-//                            val key = text.substringAfter("=")
-//                            viewModel.getPlant(indexPage, key)
-//                            indexPage++
-//                        }
+//
 //                    }
 //                    .addOnFailureListener { e ->
 //                        Log.w("TAG", "Error writing document", e)
 //                    }
 //            }
+//
+//            if (indexPage == 200) return@observe
+//            val inputStream = resources.openRawResource(R.raw.config)
+//            val text = inputStream.bufferedReader().use { it.readText() }
+//            val key = text.substringAfter("=")
+//            viewModel.getPlant(indexPage, key)
+//            indexPage += 1
         }
 
         viewModel.cycles.observe(viewLifecycleOwner) {
@@ -102,9 +106,9 @@ class HomeFragment : Fragment() {
             binding.titlePhoto.isVisible = true
             plantCycleAdapter.submitList(it)
         }
-
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initView() {
         binding.rcPlantType.adapter = plantTypeAdapter
         binding.rcPhoto.adapter = plantCycleAdapter
@@ -114,6 +118,11 @@ class HomeFragment : Fragment() {
 
         val snapHelperPhoto: SnapHelper = LinearSnapHelper()
         snapHelperPhoto.attachToRecyclerView(binding.rcPhoto)
+
+        val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        val fullName = sharedPref.getString("fullname", "")
+        val indexOf = fullName?.lastIndexOf(" ")
+        binding.tvName.text = "Hello " + indexOf?.let { fullName?.substring(it, fullName.toCharArray().size) } + ","
     }
 
     private fun initData() {
@@ -128,6 +137,9 @@ class HomeFragment : Fragment() {
             withContext(Dispatchers.Main) {
                 binding.progressBar.isVisible = true
                 binding.root.isEnabled = false
+                Thread.sleep(4000)
+                binding.progressBar.isVisible = false
+                binding.root.isEnabled = true
             }
         }
     }

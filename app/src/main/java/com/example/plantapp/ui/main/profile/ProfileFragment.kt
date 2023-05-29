@@ -2,6 +2,7 @@ package com.example.plantapp.ui.main.profile
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,6 +36,16 @@ class ProfileFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("ProfileFragment", "onStart: ")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("ProfileFragment", "onResume: ")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -75,6 +86,9 @@ class ProfileFragment : Fragment() {
             viewModel.getCollectedPlants(liked, key)
         }
         viewModel.getCollectedArticle()
+
+        val fullName = sharedPref.getString("fullname", "")
+        binding.tvName.text = fullName
     }
 
     private fun initEvent() {
@@ -116,6 +130,11 @@ class ProfileFragment : Fragment() {
             viewModel.itemDetail.value = it
             findNavController().navigate(MainFragmentDirections.actionMainFragmentToSpecieDetailFragment(-1))
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d("ProfileFragment", "onDestroyView: ")
     }
 
     private fun setupCollected(isShownSpecies: Boolean) {

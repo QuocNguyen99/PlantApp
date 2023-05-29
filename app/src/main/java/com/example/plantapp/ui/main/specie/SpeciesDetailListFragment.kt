@@ -58,13 +58,13 @@ class SpeciesDetailListFragment : Fragment() {
             val text = inputStream.bufferedReader().use { it.readText() }
             val key = text.substringAfter("=")
             val filterList = list.filter { it?.type == type }
-            viewModel.getDetailSpecies(list = filterList as MutableList<Specie?>, key)
+            viewModel.getDetailSpecies(list = filterList as MutableList<Specie?>)
         }
 
         viewModel.specieDetailList.observe(viewLifecycleOwner) {
-            if (it.size == 0) return@observe
             Log.d("TAG", "specieDetailList: ${it.size}")
-            val newList = it.toMutableList()
+            if (it.size == 0) return@observe
+            val newList = it.toMutableList().distinct().toList()
             adapter.submitList(newList)
 //            adapter.notifyDataSetChanged()
         }
@@ -72,7 +72,7 @@ class SpeciesDetailListFragment : Fragment() {
 
     private fun initEvent() {
         adapter.onItemClick = {
-            findNavController().navigate(SpeciesDetailListFragmentDirections.actionSpeciesDetailListFragmentToSpecieDetailFragment(it.id))
+            findNavController().navigate(SpeciesDetailListFragmentDirections.actionSpeciesDetailListFragmentToSpecieDetailFragment(it.id ?: -1))
         }
     }
 

@@ -51,6 +51,7 @@ class SpeciesViewModel(var plantRepository: PlantRepository? = null) : ViewModel
                     }
                     val sortedList = newList.sortedWith(compareBy { it.alphabet })
                     viewModelScope.launch(Dispatchers.Main.immediate) {
+                        Log.d("sortedList", "sortedList: ${sortedList.size} ")
                         _species.postValue(sortedList.toMutableList())
                     }
                 } catch (ex: Exception) {
@@ -62,47 +63,67 @@ class SpeciesViewModel(var plantRepository: PlantRepository? = null) : ViewModel
             }
     }
 
-    fun getDetailSpecies(list: MutableList<Specie?>, key: String) {
-        _specieDetailList.value = mutableListOf()
-        if (list.size >= 10) {
-            list.subList(0, 10).forEach {
-                viewModelScope.launch(Dispatchers.IO) {
-                    try {
-                        it?.let {
-                            val data = plantRepository?.getDetailSpecie(it.specie.id, key)
-                            Log.d("TAG", "getDetailSpecies: ${data?.id}")
-                            val tempList = _specieDetailList.value
-                            if (data != null) {
-                                tempList!!.add(data)
-                            }
-                            tempList.let { listTemp ->
-                                _specieDetailList.postValue(listTemp)
-                            }
+    fun testData(list: MutableList<Specie>) {
+        list.forEach {
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
+                    val data = plantRepository?.getDetailSpecie(it.specie.id, "sk-jSI0645f5cdfebfd3920")
+                    Log.d("TAG", "getDetailSpecies: ${data?.id}")
+                    db.collection("detail_specie").document(System.currentTimeMillis().toString())
+                        .set(data!!)
+                        .addOnSuccessListener {
+                            Log.d("TAG", "DocumentSnapshot successfully written!")
+
                         }
-                    } catch (ex: Exception) {
-                        Log.e("TAG", "getDetailSpecies: ${ex.message}")
-                    }
+                        .addOnFailureListener { e ->
+                            Log.w("TAG", "Error writing document", e)
+                        }
+                } catch (ex: Exception) {
+                    Log.e("TAG", "getDetailSpecies: ${ex.message}")
                 }
             }
-        } else {
-            list.forEach {
-                viewModelScope.launch(Dispatchers.IO) {
-                    try {
-                        it?.let {
-                            val data = plantRepository?.getDetailSpecie(it.specie.id, key)
-                            Log.d("TAG", "getDetailSpecies: ${data?.id}")
-                            val tempList = _specieDetailList.value
-                            if (data != null) {
-                                tempList!!.add(data)
+        }
+    }
+
+    fun getDetailSpecies(list: MutableList<Specie?>) {
+        _specieDetailList.value = mutableListOf()
+        if (list.size >= 10) {
+            list.subList(0, 10).forEach { item ->
+                db.collection("detail_specie")
+                    .whereEqualTo("id", item?.specie?.id)
+                    .get()
+                    .addOnSuccessListener { documents ->
+                        try {
+                            for (document in documents) {
+                                val newList = _specieDetailList.value
+                                newList?.add(document.toObject())
+                                newList?.let { list ->
+                                    _specieDetailList.postValue(list)
+                                }
                             }
-                            tempList.let { listTemp ->
-                                _specieDetailList.postValue(listTemp)
-                            }
+                        } catch (ex: Exception) {
+                            Log.e("TAG", "getDetailSpecies: ${ex.message}")
                         }
-                    } catch (ex: Exception) {
-                        Log.e("TAG", "getDetailSpecies: ${ex.message}")
                     }
-                }
+            }
+        } else {
+            list.forEach { item ->
+                db.collection("detail_specie")
+                    .whereEqualTo("id", item?.specie?.id)
+                    .get()
+                    .addOnSuccessListener { documents ->
+                        try {
+                            for (document in documents) {
+                                val newList = _specieDetailList.value
+                                newList?.add(document.toObject())
+                                newList?.let { list ->
+                                    _specieDetailList.postValue(list)
+                                }
+                            }
+                        } catch (ex: Exception) {
+                            Log.e("TAG", "getDetailSpecies: ${ex.message}")
+                        }
+                    }
             }
         }
     }

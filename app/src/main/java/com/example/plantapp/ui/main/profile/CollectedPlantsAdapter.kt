@@ -21,7 +21,7 @@ class CollectedPlantsAdapter :
 
         fun bind(detail: DetailSpecie) {
             Glide.with(binding.root.context).load(detail.default_image?.thumbnail).into(binding.imageArticle)
-            binding.title.text = detail.scientific_name[0]
+            binding.title.text = detail?.scientific_name?.get(0) ?: ""
             binding.root.setOnClickListener {
                 onClick?.invoke(detail)
             }

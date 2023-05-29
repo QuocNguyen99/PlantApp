@@ -65,8 +65,8 @@ class SpecieDetailFragment : Fragment() {
             val detail = it.find { item -> item.id == id } ?: return@observe
             binding.apply {
                 setUpLiked(liked)
-                Glide.with(requireContext()).load(detail.default_image.medium_url).into(background)
-                title.text = detail.scientific_name[0]
+                Glide.with(requireContext()).load(detail.default_image?.medium_url).into(background)
+                title.text = detail.scientific_name?.get(0) ?:""
                 cycle.text = detail.cycle
                 watering.text = detail.watering
                 rating.numStars = 5
@@ -82,10 +82,10 @@ class SpecieDetailFragment : Fragment() {
 
         profileViewModel.itemDetail.observe(viewLifecycleOwner) { detail ->
             binding.apply {
-                id = detail.id
+                id = detail.id?: -1
                 setUpLiked(liked)
-                Glide.with(requireContext()).load(detail.default_image.medium_url).into(background)
-                title.text = detail.scientific_name[0]
+                Glide.with(requireContext()).load(detail.default_image?.medium_url).into(background)
+                title.text = detail.scientific_name?.get(0) ?:""
                 cycle.text = detail.cycle
                 watering.text = detail.watering
                 rating.numStars = 5

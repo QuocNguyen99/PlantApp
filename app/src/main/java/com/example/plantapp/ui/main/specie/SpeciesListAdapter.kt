@@ -29,10 +29,10 @@ class SpeciesListAdapter : ListAdapter<DetailSpecie, SpeciesListAdapter.SpeciesV
         @SuppressLint("SetTextI18n")
         fun bind(detailSpecie: DetailSpecie) {
             binding.apply {
-                Glide.with(binding.root.context).load(detailSpecie.default_image.thumbnail).into(img)
+                Glide.with(binding.root.context).load(detailSpecie.default_image?.thumbnail).into(img)
                 cycle.text = detailSpecie.cycle
                 watering.text = detailSpecie.watering
-                title.text = detailSpecie.scientific_name[0]
+                title.text = detailSpecie.scientific_name?.get(0) ?: ""
                 description.text = "The word \"cactus\" derives, through Latin, from " +
                         "the Ancient Greek κάκτος, kaktos, a name orig" +
                         "inally used by Theophrastus for a spiny plant " +
