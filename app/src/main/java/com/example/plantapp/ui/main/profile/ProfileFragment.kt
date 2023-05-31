@@ -69,7 +69,10 @@ class ProfileFragment : Fragment() {
 
     private fun initObserve() {
         viewModel.collectedPlants.observe(viewLifecycleOwner) {
-            if (it.size == 0) return@observe
+            if (it.size == 0) {
+                collectedPlantsAdapter.submitList(mutableListOf())
+                return@observe
+            }
             collectedPlantsAdapter.submitList(it)
         }
 
@@ -148,9 +151,7 @@ class ProfileFragment : Fragment() {
     private val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, k ->
         if (k == "liked") {
             val liked = sharedPreferences.getString("liked", "")
-            if (liked != null) {
-                viewModel.getCollectedPlants(liked, key)
-            }
+            viewModel.getCollectedPlants(liked, key)
         }
     }
 }

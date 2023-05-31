@@ -29,16 +29,17 @@ class ProfileViewModel(private val fireStoreRepository: FireStoreRepository, pri
 
     val db = Firebase.firestore
 
-    fun getCollectedPlants(liked: String, key: String) {
-        val tmp = liked.replace("\\s+".toRegex(), " ").trim()
-        val list = tmp.split(" ")
-        _collectedPlants.value = mutableListOf()
-        list.forEach {
-            viewModelScope.launch(Dispatchers.IO) {
-                try {
-                    it.let {
+    fun getCollectedPlants(liked: String?, key: String) {
+        val tempLiked = liked?.trim()
+        if (!tempLiked.isNullOrEmpty()) {
+            val tmp = liked.replace("\\s+".toRegex(), " ").trim()
+            val list = tmp.split(" ")
+            _collectedPlants.value = mutableListOf()
+            list.forEach {
+                viewModelScope.launch(Dispatchers.IO) {
+                    try {
                         db.collection("detail_specie")
-                            .whereEqualTo("id", it)
+                            .whereEqualTo("id", it.toInt())
                             .get()
                             .addOnSuccessListener { documents ->
                                 for (document in documents) {
@@ -47,16 +48,19 @@ class ProfileViewModel(private val fireStoreRepository: FireStoreRepository, pri
                                     tempList.let { listTemp ->
                                         _collectedPlants.postValue(listTemp)
                                     }
+                                    break
                                 }
                             }
                             .addOnFailureListener { exception ->
                                 Log.w("TAG", "Error getting documents: ", exception)
                             }
+                    } catch (ex: Exception) {
+                        Log.e("TAG", "getDetailSpecies: ${ex.message}")
                     }
-                } catch (ex: Exception) {
-                    Log.e("TAG", "getDetailSpecies: ${ex.message}")
                 }
             }
+        } else {
+            _collectedPlants.postValue(mutableListOf())
         }
     }
 
