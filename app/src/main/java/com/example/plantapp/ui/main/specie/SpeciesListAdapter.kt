@@ -33,12 +33,7 @@ class SpeciesListAdapter : ListAdapter<DetailSpecie, SpeciesListAdapter.SpeciesV
                 cycle.text = detailSpecie.cycle
                 watering.text = detailSpecie.watering
                 title.text = detailSpecie.scientific_name?.get(0) ?: ""
-                description.text = "The word \"cactus\" derives, through Latin, from " +
-                        "the Ancient Greek κάκτος, kaktos, a name orig" +
-                        "inally used by Theophrastus for a spiny plant " +
-                        "whose identity is not certain. Cacti occur in a " +
-                        "wide range of shapes and sizes. Most cacti live " +
-                        "in habitats subject to at least some drought. "
+                description.text = detailSpecie.description
 
                 root.setOnClickListener { onItemClick?.invoke(detailSpecie) }
             }

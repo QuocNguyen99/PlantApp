@@ -26,7 +26,8 @@ class ProfileViewModel(private val fireStoreRepository: FireStoreRepository, pri
     private val _email = Firebase.auth.currentUser?.email ?: ""
 
     fun getCollectedPlants(liked: String, key: String) {
-        val list = liked.trim().split(" ")
+        val tmp = liked.replace("\\s+".toRegex(), " ").trim()
+        val list = tmp.split(" ")
         _collectedPlants.value = mutableListOf()
         list.forEach {
             viewModelScope.launch(Dispatchers.IO) {

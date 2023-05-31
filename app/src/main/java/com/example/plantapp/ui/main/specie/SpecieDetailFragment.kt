@@ -71,12 +71,7 @@ class SpecieDetailFragment : Fragment() {
                 watering.text = detail.watering
                 rating.numStars = 5
                 rating.rating = (0..5).random().toFloat()
-                description.text = "The word \"cactus\" derives, through Latin, from \n" +
-                        "the Ancient Greek κάκτος, kaktos, a name orig\n" +
-                        "inally used by Theophrastus for a spiny plant \n" +
-                        "whose identity is not certain. Cacti occur in a \n" +
-                        "wide range of shapes and sizes. Most cacti live \n" +
-                        "in habitats subject to at least some drought. "
+                description.text = detail.description
             }
         }
 
@@ -90,12 +85,7 @@ class SpecieDetailFragment : Fragment() {
                 watering.text = detail.watering
                 rating.numStars = 5
                 rating.rating = (0..5).random().toFloat()
-                description.text = "The word \"cactus\" derives, through Latin, from \n" +
-                        "the Ancient Greek κάκτος, kaktos, a name orig\n" +
-                        "inally used by Theophrastus for a spiny plant \n" +
-                        "whose identity is not certain. Cacti occur in a \n" +
-                        "wide range of shapes and sizes. Most cacti live \n" +
-                        "in habitats subject to at least some drought. "
+                description.text = detail.description
             }
         }
 

@@ -1,9 +1,11 @@
 package com.example.plantapp.utils
 
+import android.app.Dialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.text.TextUtils
 import android.util.Patterns
+import android.widget.ProgressBar
 import androidx.core.app.ActivityCompat
 import com.google.firebase.Timestamp
 import java.text.SimpleDateFormat
@@ -33,4 +35,14 @@ fun Timestamp.format(): String {
 
 fun Context.hasPermissions(vararg permissions: String): Boolean = permissions.all {
     ActivityCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+}
+
+fun Context.createWaitingDialog(): Dialog {
+    val dialog = Dialog(this)
+    val progressView = ProgressBar(this)
+    dialog.setContentView(progressView)
+    dialog.setCancelable(false)
+    dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+    dialog.show()
+    return dialog
 }

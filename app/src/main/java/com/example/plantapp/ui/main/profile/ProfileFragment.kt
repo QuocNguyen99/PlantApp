@@ -1,6 +1,7 @@
 package com.example.plantapp.ui.main.profile
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -28,7 +29,7 @@ class ProfileFragment : Fragment() {
 
     private val collectedPlantsAdapter = CollectedPlantsAdapter()
     private val collectedArticleAdapter = ArticleAdapter()
-
+    private var sharedPref: SharedPreferences? = null
     var key = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -78,8 +79,9 @@ class ProfileFragment : Fragment() {
     }
 
     private fun initData() {
-        val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE) ?: return
-        var liked = sharedPref.getString("liked", "")
+        sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE) ?: return
+        val liked = sharedPref?.getString("liked", "")
+        sharedPref?.registerOnSharedPreferenceChangeListener(listener)
         binding.rlvCollectedPlants.adapter = collectedPlantsAdapter
         binding.rlvCollectedArticle.adapter = collectedArticleAdapter
         if (liked != null) {
@@ -87,7 +89,7 @@ class ProfileFragment : Fragment() {
         }
         viewModel.getCollectedArticle()
 
-        val fullName = sharedPref.getString("fullname", "")
+        val fullName = sharedPref?.getString("fullname", "")
         binding.tvName.text = fullName
     }
 
@@ -134,11 +136,21 @@ class ProfileFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        sharedPref?.unregisterOnSharedPreferenceChangeListener(listener)
         Log.d("ProfileFragment", "onDestroyView: ")
     }
 
     private fun setupCollected(isShownSpecies: Boolean) {
         binding.groupSpeciesView.visibility = if (isShownSpecies) View.VISIBLE else View.GONE
         binding.groupArticleView.visibility = if (isShownSpecies) View.GONE else View.VISIBLE
+    }
+
+    private val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, k ->
+        if (k == "liked") {
+            val liked = sharedPreferences.getString("liked", "")
+            if (liked != null) {
+                viewModel.getCollectedPlants(liked, key)
+            }
+        }
     }
 }

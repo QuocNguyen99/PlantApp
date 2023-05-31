@@ -2,6 +2,7 @@ package com.example.plantapp.ui.add_plants
 
 import android.Manifest
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -19,6 +20,7 @@ import com.example.plantapp.R
 import com.example.plantapp.databinding.FragmentAddPlantBinding
 import com.example.plantapp.network.repository.article.FireStoreRepository
 import com.example.plantapp.ui.ViewModelFactory
+import com.example.plantapp.utils.createWaitingDialog
 import com.example.plantapp.utils.hasPermissions
 
 
@@ -32,6 +34,9 @@ class AddPlantFragment : Fragment() {
     private val wateringList = mutableListOf("Average", "Minimum", "Frequent")
     private lateinit var cycleAdapter: ArrayAdapter<String>
     private lateinit var wateringAdapter: ArrayAdapter<String>
+    private lateinit var typeAdapter: ArrayAdapter<String>
+
+    private var waitingDialog: Dialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -56,24 +61,33 @@ class AddPlantFragment : Fragment() {
         viewModel.error.observe(viewLifecycleOwner) {
             if (it.isEmpty())
                 return@observe
+            waitingDialog?.dismiss()
             Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_SHORT).show()
             binding.btnSave.isEnabled = true
         }
 
         viewModel.saveCompleted.observe(viewLifecycleOwner) {
+            waitingDialog?.dismiss()
             if (it) {
                 Toast.makeText(requireContext(), "Add plant success!", Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack()
             }
+        }
+
+        viewModel.type.observe(viewLifecycleOwner) {
+            typeAdapter.clear()
+            typeAdapter.addAll(it)
         }
     }
 
     private fun initData() {
         cycleAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, cycleList)
         wateringAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, wateringList)
+        typeAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item, mutableListOf())
 
         binding.spinnerCycle.adapter = cycleAdapter
         binding.spinnerWatering.adapter = wateringAdapter
+        binding.spinnerType.adapter = typeAdapter
     }
 
     private fun initEvent() {
@@ -92,9 +106,17 @@ class AddPlantFragment : Fragment() {
 
         binding.btnSave.setOnClickListener {
             it.isEnabled = false
-            viewModel.addPlant(binding.edtName.text.toString(),
-                binding.spinnerCycle.selectedItem.toString(),
-                binding.spinnerWatering.selectedItem.toString(),)
+            if (waitingDialog == null) {
+                waitingDialog = requireContext().createWaitingDialog()
+            }
+            waitingDialog?.show()
+            viewModel.addPlant(
+                name = binding.edtName.text.toString(),
+                type = binding.spinnerType.selectedItem.toString(),
+                cycle = binding.spinnerCycle.selectedItem.toString(),
+                watering = binding.spinnerWatering.selectedItem.toString(),
+                description = binding.edtDescription.text.toString(),
+            )
         }
 
         binding.image.callOnClick()

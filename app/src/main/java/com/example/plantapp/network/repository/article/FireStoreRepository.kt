@@ -5,6 +5,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.camera.core.SurfaceRequest.Result.ResultCode
 import com.example.plantapp.data.model.Article
+import com.example.plantapp.data.model.DetailSpecie
 import com.example.plantapp.data.response.DefaultImage
 import com.example.plantapp.data.response.Plant
 import com.google.firebase.auth.FirebaseAuth
@@ -112,7 +113,7 @@ class FireStoreRepository {
         )
     }
 
-    fun getArticle(
+    private fun getArticle(
         id: String,
         onSuccess: ((articles: Article?) -> Unit)? = null,
         onError: ((exception: Exception) -> Unit)? = null
@@ -132,7 +133,7 @@ class FireStoreRepository {
             }
     }
 
-    fun setArticle(
+    private fun setArticle(
         article: Article,
         onSuccess: ((articles: Article) -> Unit)? = null,
         onError: ((exception: Exception) -> Unit)? = null
@@ -149,6 +150,7 @@ class FireStoreRepository {
 
     fun setPlant(
         plant: Plant,
+        description: String,
         bitmap: Bitmap,
         onSuccess: ((plant: Plant) -> Unit)? = null,
         onError: ((exception: Exception) -> Unit)? = null
@@ -167,10 +169,11 @@ class FireStoreRepository {
             val docRef = _db.collection("species").document(Date().time.toString())
             docRef.set(plant)
                 .addOnSuccessListener {
+                    setDetailSpecie(plant, description, onSuccess, onError)
                     onSuccess?.invoke(plant)
                 }
-                .addOnFailureListener {
-                    onError?.invoke(it)
+                .addOnFailureListener { err ->
+                    onError?.invoke(err)
                 }
         })
     }
@@ -206,5 +209,37 @@ class FireStoreRepository {
                 }
             }
 
+    }
+
+    private fun setDetailSpecie(plant: Plant,
+                                description: String,
+                                onSuccess: ((plant: Plant) -> Unit)? = null,
+                                onError: ((exception: Exception) -> Unit)? = null) {
+        val detailSpecie = DetailSpecie()
+        detailSpecie.description = description
+        val defaultImage = com.example.plantapp.data.model.DefaultImage()
+        defaultImage.license_name = plant.default_image?.original_url
+        defaultImage.license_url = plant.default_image?.original_url
+        defaultImage.medium_url = plant.default_image?.original_url
+        defaultImage.original_url = plant.default_image?.original_url
+        defaultImage.regular_url = plant.default_image?.original_url
+        defaultImage.small_url = plant.default_image?.original_url
+        defaultImage.thumbnail = plant.default_image?.original_url
+        defaultImage.license = 2
+        detailSpecie.default_image = defaultImage
+        detailSpecie.common_name = plant.common_name
+        detailSpecie.cycle = plant.cycle
+        detailSpecie.watering = plant.watering
+        detailSpecie.id = plant.id
+        detailSpecie.scientific_name = plant.scientific_name
+
+        val docRef = _db.collection("detail_specie").document(Date().time.toString())
+        docRef.set(detailSpecie)
+            .addOnSuccessListener {
+                onSuccess?.invoke(plant)
+            }
+            .addOnFailureListener {
+                onError?.invoke(it)
+            }
     }
 }
