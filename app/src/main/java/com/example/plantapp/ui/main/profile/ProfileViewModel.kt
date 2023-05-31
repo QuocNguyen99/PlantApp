@@ -10,6 +10,8 @@ import com.example.plantapp.data.model.DetailSpecie
 import com.example.plantapp.network.repository.article.FireStoreRepository
 import com.example.plantapp.network.repository.plant.PlantRepository
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,11 +21,13 @@ class ProfileViewModel(private val fireStoreRepository: FireStoreRepository, pri
     private val _collectedPlants = MutableLiveData<MutableList<DetailSpecie>>()
     val collectedPlants: LiveData<MutableList<DetailSpecie>> = _collectedPlants
 
-     val itemDetail = MutableLiveData<DetailSpecie>()
+    val itemDetail = MutableLiveData<DetailSpecie>()
 
     private val _collectedArticles = MutableLiveData<MutableList<Article>>()
     val collectedArticles: LiveData<MutableList<Article>> = _collectedArticles
     private val _email = Firebase.auth.currentUser?.email ?: ""
+
+    val db = Firebase.firestore
 
     fun getCollectedPlants(liked: String, key: String) {
         val tmp = liked.replace("\\s+".toRegex(), " ").trim()
@@ -33,13 +37,21 @@ class ProfileViewModel(private val fireStoreRepository: FireStoreRepository, pri
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     it.let {
-                        val data = plantRepository.getDetailSpecie(it.trim().toInt(), key)
-                        Log.d("TAG", "getDetailSpecies: ${data.id}")
-                        val tempList = _collectedPlants.value
-                        tempList!!.add(data)
-                        tempList.let { listTemp ->
-                            _collectedPlants.postValue(listTemp)
-                        }
+                        db.collection("detail_specie")
+                            .whereEqualTo("id", it)
+                            .get()
+                            .addOnSuccessListener { documents ->
+                                for (document in documents) {
+                                    val tempList = _collectedPlants.value
+                                    tempList!!.add(document.toObject())
+                                    tempList.let { listTemp ->
+                                        _collectedPlants.postValue(listTemp)
+                                    }
+                                }
+                            }
+                            .addOnFailureListener { exception ->
+                                Log.w("TAG", "Error getting documents: ", exception)
+                            }
                     }
                 } catch (ex: Exception) {
                     Log.e("TAG", "getDetailSpecies: ${ex.message}")
