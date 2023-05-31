@@ -24,6 +24,10 @@ class SpeciesViewModel(var plantRepository: PlantRepository? = null) : ViewModel
     private val _specieDetailList = MutableLiveData<MutableList<DetailSpecie>>(mutableListOf())
     val specieDetailList: LiveData<MutableList<DetailSpecie>> = _specieDetailList
 
+    init {
+        addRealtimeSpecies()
+    }
+
     fun getSpecies() {
         db.collection("species")
             .get()
@@ -61,6 +65,14 @@ class SpeciesViewModel(var plantRepository: PlantRepository? = null) : ViewModel
             .addOnFailureListener { exception ->
                 Log.w("TAG", "Error getting documents: ${exception.cause}", exception)
             }
+    }
+
+    private fun addRealtimeSpecies() {
+        db.collection("species").addSnapshotListener {
+                _, _ ->
+            _species.value = mutableListOf()
+            getSpecies()
+        }
     }
 
     fun testData(list: MutableList<Specie>) {
