@@ -40,7 +40,11 @@ class SpeciesViewModel(var plantRepository: PlantRepository? = null) : ViewModel
                         val index = document.data["scientific_name"].toString().indexOf(" ")
                         val type = if (index == -1) {
                             document.data["scientific_name"].toString()
-                                .substring(1, document.data["scientific_name"].toString().toCharArray().size - 1)
+                                .substring(
+                                    1,
+                                    document.data["scientific_name"].toString()
+                                        .toCharArray().size - 1
+                                )
                         } else {
                             document.data["scientific_name"].toString().substring(1, index)
                         }
@@ -48,7 +52,8 @@ class SpeciesViewModel(var plantRepository: PlantRepository? = null) : ViewModel
                         newList.add(
                             Specie(
                                 type,
-                                document.data["scientific_name"].toString().toCharArray()[1].toString().uppercase(),
+                                document.data["scientific_name"].toString()
+                                    .toCharArray()[1].toString().uppercase(),
                                 document.toObject()
                             )
                         )
@@ -68,8 +73,7 @@ class SpeciesViewModel(var plantRepository: PlantRepository? = null) : ViewModel
     }
 
     private fun addRealtimeSpecies() {
-        db.collection("species").addSnapshotListener {
-                _, _ ->
+        db.collection("species").addSnapshotListener { _, _ ->
             _species.value = mutableListOf()
             getSpecies()
         }
@@ -79,7 +83,8 @@ class SpeciesViewModel(var plantRepository: PlantRepository? = null) : ViewModel
         list.forEach {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    val data = plantRepository?.getDetailSpecie(it.specie.id, "sk-jSI0645f5cdfebfd3920")
+                    val data =
+                        plantRepository?.getDetailSpecie(it.specie.id, "sk-jSI0645f5cdfebfd3920")
                     Log.d("TAG", "getDetailSpecies: ${data?.id}")
                     db.collection("detail_specie").document(System.currentTimeMillis().toString())
                         .set(data!!)
@@ -99,44 +104,23 @@ class SpeciesViewModel(var plantRepository: PlantRepository? = null) : ViewModel
 
     fun getDetailSpecies(list: MutableList<Specie?>) {
         _specieDetailList.value = mutableListOf()
-        if (list.size >= 10) {
-            list.subList(0, 10).forEach { item ->
-                db.collection("detail_specie")
-                    .whereEqualTo("id", item?.specie?.id)
-                    .get()
-                    .addOnSuccessListener { documents ->
-                        try {
-                            for (document in documents) {
-                                val newList = _specieDetailList.value
-                                newList?.add(document.toObject())
-                                newList?.let { list ->
-                                    _specieDetailList.postValue(list)
-                                }
+        list.forEach { item ->
+            db.collection("detail_specie")
+                .whereEqualTo("id", item?.specie?.id)
+                .get()
+                .addOnSuccessListener { documents ->
+                    try {
+                        for (document in documents) {
+                            val newList = _specieDetailList.value
+                            newList?.add(document.toObject())
+                            newList?.let { list ->
+                                _specieDetailList.postValue(list)
                             }
-                        } catch (ex: Exception) {
-                            Log.e("TAG", "getDetailSpecies: ${ex.message}")
                         }
+                    } catch (ex: Exception) {
+                        Log.e("TAG", "getDetailSpecies: ${ex.message}")
                     }
-            }
-        } else {
-            list.forEach { item ->
-                db.collection("detail_specie")
-                    .whereEqualTo("id", item?.specie?.id)
-                    .get()
-                    .addOnSuccessListener { documents ->
-                        try {
-                            for (document in documents) {
-                                val newList = _specieDetailList.value
-                                newList?.add(document.toObject())
-                                newList?.let { list ->
-                                    _specieDetailList.postValue(list)
-                                }
-                            }
-                        } catch (ex: Exception) {
-                            Log.e("TAG", "getDetailSpecies: ${ex.message}")
-                        }
-                    }
-            }
+                }
         }
     }
 }

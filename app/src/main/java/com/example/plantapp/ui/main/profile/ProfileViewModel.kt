@@ -14,9 +14,13 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class ProfileViewModel(private val fireStoreRepository: FireStoreRepository, private val plantRepository: PlantRepository) : ViewModel() {
+class ProfileViewModel(
+    private val fireStoreRepository: FireStoreRepository,
+    private val plantRepository: PlantRepository
+) : ViewModel() {
 
     private val _collectedPlants = MutableLiveData<MutableList<DetailSpecie>>()
     val collectedPlants: LiveData<MutableList<DetailSpecie>> = _collectedPlants
@@ -29,7 +33,7 @@ class ProfileViewModel(private val fireStoreRepository: FireStoreRepository, pri
 
     val db = Firebase.firestore
 
-    fun getCollectedPlants(liked: String?, key: String) {
+    fun getCollectedPlants(liked: String?) {
         val tempLiked = liked?.trim()
         if (!tempLiked.isNullOrEmpty()) {
             val tmp = liked.replace("\\s+".toRegex(), " ").trim()
@@ -45,8 +49,8 @@ class ProfileViewModel(private val fireStoreRepository: FireStoreRepository, pri
                                 for (document in documents) {
                                     val tempList = _collectedPlants.value
                                     tempList!!.add(document.toObject())
-                                    tempList.let { listTemp ->
-                                        _collectedPlants.postValue(listTemp)
+                                    viewModelScope.launch(Dispatchers.Main.immediate) {
+                                        _collectedPlants.value = tempList!!
                                     }
                                     break
                                 }
@@ -60,7 +64,9 @@ class ProfileViewModel(private val fireStoreRepository: FireStoreRepository, pri
                 }
             }
         } else {
-            _collectedPlants.postValue(mutableListOf())
+            viewModelScope.launch(Dispatchers.Main.immediate) {
+                _collectedPlants.value = mutableListOf()
+            }
         }
     }
 

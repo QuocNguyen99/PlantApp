@@ -47,7 +47,10 @@ class SpeciesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val service = ApiClient.plantService
         val mainRepository = PlantRepository(service)
-        viewModel = ViewModelProvider(requireActivity(), ViewModelFactory(mainRepository))[SpeciesViewModel::class.java]
+        viewModel = ViewModelProvider(
+            requireActivity(),
+            ViewModelFactory(mainRepository)
+        )[SpeciesViewModel::class.java]
 
         initView()
         initEvent()
@@ -62,7 +65,7 @@ class SpeciesFragment : Fragment() {
                 specie?.let { item ->
                     if (index == 0) {
                         listWithOutDuplicate.add(item)
-                    } else if (index != -1 && !it[index - 1]?.type.equals(item.type)) {
+                    } else if (index != -1 && listWithOutDuplicate.find { specie -> specie.type == item.type } == null) {
                         listWithOutDuplicate.add(specie)
                     }
                 }
@@ -78,7 +81,11 @@ class SpeciesFragment : Fragment() {
 
     private fun initEvent() {
         adapter.onItemClick = {
-            findNavController().navigate(SpeciesFragmentDirections.actionSpeciesFragmentToSpeciesDetailListFragment(it))
+            findNavController().navigate(
+                SpeciesFragmentDirections.actionSpeciesFragmentToSpeciesDetailListFragment(
+                    it
+                )
+            )
         }
 
         binding.imvBack.setOnClickListener {

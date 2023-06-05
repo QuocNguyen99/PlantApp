@@ -73,7 +73,7 @@ class ProfileFragment : Fragment() {
                 collectedPlantsAdapter.submitList(mutableListOf())
                 return@observe
             }
-            collectedPlantsAdapter.submitList(it)
+            collectedPlantsAdapter.submitList(ArrayList(it))
         }
 
         viewModel.collectedArticles.observe(viewLifecycleOwner) {
@@ -88,7 +88,7 @@ class ProfileFragment : Fragment() {
         binding.rlvCollectedPlants.adapter = collectedPlantsAdapter
         binding.rlvCollectedArticle.adapter = collectedArticleAdapter
         if (liked != null) {
-            viewModel.getCollectedPlants(liked, key)
+            viewModel.getCollectedPlants(liked)
         }
         viewModel.getCollectedArticle()
 
@@ -118,7 +118,7 @@ class ProfileFragment : Fragment() {
                 val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE) ?: return@setOnClickListener
                 val liked = sharedPref.getString("liked", "")
                 if (liked != null) {
-                    viewModel.getCollectedPlants(liked, key)
+                    viewModel.getCollectedPlants(liked)
                 }
             }
         }
@@ -151,7 +151,7 @@ class ProfileFragment : Fragment() {
     private val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, k ->
         if (k == "liked") {
             val liked = sharedPreferences.getString("liked", "")
-            viewModel.getCollectedPlants(liked, key)
+            viewModel.getCollectedPlants(liked)
         }
     }
 }

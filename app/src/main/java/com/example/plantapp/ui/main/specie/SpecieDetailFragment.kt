@@ -49,7 +49,10 @@ class SpecieDetailFragment : Fragment() {
 
         val service = ApiClient.plantService
         val mainRepository = PlantRepository(service)
-        viewModel = ViewModelProvider(requireActivity(), ViewModelFactory(mainRepository))[SpeciesViewModel::class.java]
+        viewModel = ViewModelProvider(
+            requireActivity(),
+            ViewModelFactory(mainRepository)
+        )[SpeciesViewModel::class.java]
 
         profileViewModel = ViewModelProvider(
             requireActivity(),
@@ -59,14 +62,13 @@ class SpecieDetailFragment : Fragment() {
         val sharedPref = requireActivity().getPreferences(Context.MODE_PRIVATE) ?: return
         var liked = sharedPref.getString("liked", "")
 
-
         viewModel.specieDetailList.observe(viewLifecycleOwner) {
             if (id == -1) return@observe
             val detail = it.find { item -> item.id == id } ?: return@observe
             binding.apply {
                 setUpLiked(liked)
                 Glide.with(requireContext()).load(detail.default_image?.medium_url).into(background)
-                title.text = detail.scientific_name?.get(0) ?:""
+                title.text = detail.scientific_name?.get(0) ?: ""
                 cycle.text = detail.cycle
                 watering.text = detail.watering
                 rating.numStars = 5
@@ -76,11 +78,12 @@ class SpecieDetailFragment : Fragment() {
         }
 
         profileViewModel.itemDetail.observe(viewLifecycleOwner) { detail ->
+            if (id != -1) return@observe
             binding.apply {
-                id = detail.id?: -1
+                id = detail.id ?: -1
                 setUpLiked(liked)
                 Glide.with(requireContext()).load(detail.default_image?.medium_url).into(background)
-                title.text = detail.scientific_name?.get(0) ?:""
+                title.text = detail.scientific_name?.get(0) ?: ""
                 cycle.text = detail.cycle
                 watering.text = detail.watering
                 rating.numStars = 5
@@ -117,7 +120,7 @@ class SpecieDetailFragment : Fragment() {
         }
     }
 
-    fun setUpLiked(liked: String?) {
+    private fun setUpLiked(liked: String?) {
         if (liked != null) {
             if (liked.contains(id.toString())) {
                 binding.imvLiked.setImageResource(R.drawable.background_like)
